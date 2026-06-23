@@ -1,5 +1,6 @@
-using Microsoft.OpenApi;
 using FCG.Catalog.Infrastructure;
+using FCG.Catalog.Infrastructure.Migrations;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,4 +55,13 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+await MigrateDatabase();
+
 app.Run();
+
+async Task MigrateDatabase()
+{
+    await using var scope = app.Services.CreateAsyncScope();
+
+    await DataBaseMigration.MigrateDatabase(scope.ServiceProvider);
+}
