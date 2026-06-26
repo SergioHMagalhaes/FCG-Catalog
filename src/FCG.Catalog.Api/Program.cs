@@ -1,5 +1,4 @@
 using FCG.Catalog.Api.Filters;
-using FCG.Catalog.Application;
 using FCG.Catalog.Infrastructure;
 using FCG.Catalog.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -39,6 +38,8 @@ builder.Services.AddSwaggerGen(options =>
         [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
 });
+
+builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
