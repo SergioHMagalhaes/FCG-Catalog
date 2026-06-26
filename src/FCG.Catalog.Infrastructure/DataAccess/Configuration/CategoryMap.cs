@@ -19,6 +19,9 @@ internal class CategoryMap : IEntityTypeConfiguration<Category>
             .IsRequired()
             .HasMaxLength(100);
 
+        builder.HasIndex(category => category.Name)
+            .IsUnique();
+
         builder.HasMany(category => category.Games)
             .WithOne(game => game.Category)
             .HasForeignKey(game => game.CategoryId);
