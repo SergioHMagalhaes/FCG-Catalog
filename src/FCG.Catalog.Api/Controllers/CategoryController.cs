@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Application.UseCases.Category.Register;
+﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+using FCG.Catalog.Application.UseCases.Category.Register;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Domain.Enums;
@@ -23,5 +24,18 @@ public class CategoryController : ControllerBase
         var response = await useCase.Execute(request);
         
         return Created(string.Empty, response);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseCategoriesJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> GetAllCategories([FromServices] IGetAllCategoryUseCase useCase)
+    {
+        var response = await useCase.Execute();
+
+        if (response.Categories.Count != 0)
+            return Ok(response);
+
+        return NoContent();
     }
 }

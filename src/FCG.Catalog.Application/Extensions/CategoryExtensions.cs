@@ -13,4 +13,13 @@ public static class CategoryExtensions
             Name = request.Name,
         };
     }
+
+    public static List<ResponseCategoryJson> MapToResponse(this List<Category> categories)
+    {
+        return [.. categories.Select(c => new ResponseCategoryJson
+        {
+            Id = c.Id,
+            Name = c.Name,
+        })];
+    }
 }

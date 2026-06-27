@@ -21,4 +21,9 @@ internal class CategoryRepository(ApplicationDbContext context) : ICategoryRepos
             .Categories
             .AnyAsync(category => category.Name.ToUpper() == normalizedName);
     }
+
+    public Task<List<Category>> GetAll()
+    {
+        return _dbContext.Categories.AsNoTracking().ToListAsync();
+    }
 }
