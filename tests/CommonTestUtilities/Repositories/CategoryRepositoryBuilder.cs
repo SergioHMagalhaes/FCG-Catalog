@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Repositories;
+﻿using FCG.Catalog.Domain.Entities;
+using FCG.Catalog.Domain.Repositories;
 using Moq;
 
 namespace CommonTestUtilities.Repositories;
@@ -15,5 +16,13 @@ public class CategoryRepositoryBuilder
     {
         _repository.Setup(userReadOnly => userReadOnly.ExistsByName(name)).ReturnsAsync(true);
     }
+
+    public CategoryRepositoryBuilder GetAll(List<Category> categories)
+    {
+        _repository.Setup(repository => repository.GetAll()).ReturnsAsync(categories);
+
+        return this;
+    }
+
     public ICategoryRepository Build() => _repository.Object;
 }
