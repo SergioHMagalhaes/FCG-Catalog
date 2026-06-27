@@ -31,5 +31,12 @@ public class CategoryRepositoryBuilder
         return this;
     }
 
+    public CategoryRepositoryBuilder GetByIdTracked(Category category)
+    {
+        _repository.Setup(repository => repository.GetByIdTracked(category.Id)).ReturnsAsync(category);
+
+        return this;
+    }
+
     public ICategoryRepository Build() => _repository.Object;
 }
