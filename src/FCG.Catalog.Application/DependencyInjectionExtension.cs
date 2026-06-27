@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+﻿using FCG.Catalog.Application.UseCases.Category.Delete;
+using FCG.Catalog.Application.UseCases.Category.GetAll;
 using FCG.Catalog.Application.UseCases.Category.GetById;
 using FCG.Catalog.Application.UseCases.Category.Register;
 using FCG.Catalog.Application.UseCases.Category.Update;
@@ -19,6 +20,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetAllCategoryUseCase, GetAllCategoryUseCase>();
         services.AddScoped<IGetCategoryByIdUseCase, GetCategoryByIdUseCase>();
         services.AddScoped<IUpdateCategoryUseCase, UpdateCategoryUseCase>();
+        services.AddScoped<IDeleteCategoryUseCase, DeleteCategoryUseCase>();
     }
 
 }

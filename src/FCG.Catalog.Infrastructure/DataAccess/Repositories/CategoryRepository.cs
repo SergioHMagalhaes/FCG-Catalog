@@ -13,6 +13,13 @@ internal class CategoryRepository(ApplicationDbContext context) : ICategoryRepos
         await _dbContext.Categories.AddAsync(category);
     }
 
+    public async Task Delete(long id)
+    {
+        var result = await _dbContext.Categories.FindAsync(id);
+
+        _dbContext.Categories.Remove(result!);
+    }
+
     public async Task<bool> ExistsByName(string name)
     {
         var normalizedName = name.Trim().ToUpper();

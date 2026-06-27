@@ -10,4 +10,5 @@ public interface ICategoryRepository
     Task<Category?> GetById(long id);
     Task<Category?> GetByIdTracked(long id);
     void Update(Category category);
+    Task Delete(long id);
 }

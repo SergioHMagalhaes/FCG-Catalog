@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+﻿using FCG.Catalog.Application.UseCases.Category.Delete;
+using FCG.Catalog.Application.UseCases.Category.GetAll;
 using FCG.Catalog.Application.UseCases.Category.GetById;
 using FCG.Catalog.Application.UseCases.Category.Register;
 using FCG.Catalog.Application.UseCases.Category.Update;
@@ -54,6 +55,7 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPut]
+    [Authorize(Roles = Roles.ADMIN)]
     [Route("{id}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
@@ -64,6 +66,20 @@ public class CategoryController : ControllerBase
         [FromBody] RequestCategoryJson request)
     {
         await useCase.Execute(id, request);
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Authorize(Roles = Roles.ADMIN)]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+    [FromServices] IDeleteCategoryUseCase useCase,
+    [FromRoute] long id)
+    {
+        await useCase.Execute(id);
 
         return NoContent();
     }
