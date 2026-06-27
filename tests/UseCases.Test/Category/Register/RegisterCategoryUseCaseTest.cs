@@ -40,7 +40,7 @@ public class RegisterCategoryUseCaseTest
 
         async Task<ResponseRegisterdCategoryJson> act() => await useCase.Execute(request);
 
-        await Assert.ThrowsAsync<ErrorOnValidationException>((Func<Task<ResponseRegisterdCategoryJson>>)act);
+        await Assert.ThrowsAsync<ErrorOnValidationException>(act);
     }
 
     private RegisterCategoryUseCase CreateUseCase(string? name = null)
