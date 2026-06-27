@@ -22,4 +22,13 @@ public static class CategoryExtensions
             Name = c.Name,
         })];
     }
+
+    public static ResponseCategoryJson MapToResponse(this Category category)
+    {
+        return new ResponseCategoryJson
+        {
+            Id = category.Id,
+            Name = category.Name,
+        };
+    }
 }

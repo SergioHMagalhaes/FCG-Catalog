@@ -17,13 +17,19 @@ internal class CategoryRepository(ApplicationDbContext context) : ICategoryRepos
     {
         var normalizedName = name.Trim().ToUpper();
 
-        return await _dbContext
-            .Categories
+        return await _dbContext.Categories
             .AnyAsync(category => category.Name.ToUpper() == normalizedName);
     }
 
     public Task<List<Category>> GetAll()
     {
         return _dbContext.Categories.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<Category?> GetById(long id)
+    {
+        return await _dbContext.Categories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(category => category.Id == id);
     }
 }

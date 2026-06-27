@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+using FCG.Catalog.Application.UseCases.Category.GetById;
 using FCG.Catalog.Application.UseCases.Category.Register;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
@@ -37,5 +38,18 @@ public class CategoryController : ControllerBase
             return Ok(response);
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseCategoryJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        [FromServices] IGetCategoryByIdUseCase useCase,
+        [FromRoute] long id)
+    {
+        var response = await useCase.Execute(id);
+
+        return Ok(response);
     }
 }
