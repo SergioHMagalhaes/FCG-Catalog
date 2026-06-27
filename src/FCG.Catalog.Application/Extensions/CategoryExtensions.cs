@@ -14,6 +14,12 @@ public static class CategoryExtensions
         };
     }
 
+    public static Category MapToDomain(this RequestCategoryJson request, Category category)
+    {
+        category.Name = request.Name;
+        return category;
+    }
+
     public static List<ResponseCategoryJson> MapToResponse(this List<Category> categories)
     {
         return [.. categories.Select(c => new ResponseCategoryJson

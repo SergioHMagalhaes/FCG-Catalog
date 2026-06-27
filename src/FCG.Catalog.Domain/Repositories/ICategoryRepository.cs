@@ -8,4 +8,6 @@ public interface ICategoryRepository
     Task<bool> ExistsByName(string name);
     Task<List<Category>> GetAll();
     Task<Category?> GetById(long id);
+    Task<Category?> GetByIdTracked(long id);
+    void Update(Category category);
 }

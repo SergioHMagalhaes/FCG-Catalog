@@ -1,7 +1,7 @@
 ﻿using FCG.Catalog.Communication.Requests;
 using FluentValidation;
 
-namespace FCG.Catalog.Application.UseCases.Category.Register;
+namespace FCG.Catalog.Application.UseCases.Category;
 
 public class RegisterCategoryValidator : AbstractValidator<RequestCategoryJson>
 {

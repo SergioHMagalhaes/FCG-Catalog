@@ -32,4 +32,15 @@ internal class CategoryRepository(ApplicationDbContext context) : ICategoryRepos
             .AsNoTracking()
             .FirstOrDefaultAsync(category => category.Id == id);
     }
+
+    public Task<Category?> GetByIdTracked(long id)
+    {
+        return _dbContext.Categories
+            .FirstOrDefaultAsync(category => category.Id == id);
+    }
+
+    public void Update(Category category)
+    {
+        _dbContext.Categories.Update(category);
+    }
 }
