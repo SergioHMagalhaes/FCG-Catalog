@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\FCG.Catalog.Communication\FCG.Catalog.Communication.csproj" />
+    <ProjectReference Include="..\..\src\FCG.Catalog.Exception\FCG.Catalog.Exception.csproj" />
     <ProjectReference Include="..\CommonTestUtilities\CommonTestUtilities.csproj" />
   </ItemGroup>
 

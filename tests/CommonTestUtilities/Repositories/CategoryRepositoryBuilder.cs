@@ -24,5 +24,12 @@ public class CategoryRepositoryBuilder
         return this;
     }
 
+    public CategoryRepositoryBuilder GetById(Category category)
+    {
+        _repository.Setup(repository => repository.GetById(category.Id)).ReturnsAsync(category);
+
+        return this;
+    }
+
     public ICategoryRepository Build() => _repository.Object;
 }
