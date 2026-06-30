@@ -1,8 +1,6 @@
 ﻿using FCG.Catalog.Application.Extensions;
-using FCG.Catalog.Application.UseCases.Category;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
-using FCG.Catalog.Domain.Entities;
 using FCG.Catalog.Domain.Repositories;
 using FCG.Catalog.Exception.ExceptionsBase;
 using FluentValidation.Results;

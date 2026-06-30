@@ -46,5 +46,12 @@ public class GameRepositoryBuilder
         return this;
     }
 
+    public GameRepositoryBuilder GetByIdTracked(Game game)
+    {
+        _repository.Setup(repository => repository.GetByIdTracked(game.Id)).ReturnsAsync(game);
+
+        return this;
+    }
+
     public IGameRepository Build() => _repository.Object;
 }

@@ -10,4 +10,5 @@ public interface IGameRepository
     Task<PagedResult<Game>> GetAll(GamesFilter filter);
     Task<Game?> GetById(long id);
     Task<Game?> GetByIdTracked(long id);
+    void Update(Game game);
 }
