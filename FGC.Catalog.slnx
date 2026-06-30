@@ -7,5 +7,8 @@
     <Project Path="src/FCG.Catalog.Exception/FCG.Catalog.Exception.csproj" />
     <Project Path="src/FCG.Catalog.Infrastructure/FCG.Catalog.Infrastructure.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" Id="2e5d971f-2d48-40a3-97de-ee38744583c5" />
+    <Project Path="tests/UseCases.Test/UseCases.Test.csproj" Id="5ad9e66d-fbb1-4120-bf1c-22d309c622ea" />
+  </Folder>
 </Solution>

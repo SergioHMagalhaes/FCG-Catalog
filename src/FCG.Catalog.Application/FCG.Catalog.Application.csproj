@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.9" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FCG.Catalog.Communication\FCG.Catalog.Communication.csproj" />
     <ProjectReference Include="..\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
     <ProjectReference Include="..\FCG.Catalog.Exception\FCG.Catalog.Exception.csproj" />
