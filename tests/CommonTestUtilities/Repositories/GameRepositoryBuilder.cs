@@ -39,5 +39,12 @@ public class GameRepositoryBuilder
                 && actualFilter.Search == filter.Search)), Times.Once);
     }
 
+    public GameRepositoryBuilder GetById(Game game)
+    {
+        _repository.Setup(repository => repository.GetById(game.Id)).ReturnsAsync(game);
+
+        return this;
+    }
+
     public IGameRepository Build() => _repository.Object;
 }

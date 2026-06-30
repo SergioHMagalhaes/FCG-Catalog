@@ -32,6 +32,11 @@ public class GameBuilder
             .RuleFor(g => g.Name, f => f.Commerce.ProductName())
             .RuleFor(g => g.Description, f => f.Commerce.ProductDescription())
             .RuleFor(g => g.Price, f => f.Random.Decimal(1, 500))
-            .RuleFor(g => g.CategoryId, _ => 1);
+            .RuleFor(g => g.CategoryId, _ => 1)
+            .RuleFor(g => g.Category, f => new Category
+            {
+                Id = 1,
+                Name = f.Commerce.Categories(1)[0]
+            });
     }
 }
