@@ -43,4 +43,18 @@ internal class GameRepository(ApplicationDbContext context) : IGameRepository
 
         return new PagedResult<Game>(items, total, filter.Page, filter.PageSize);
     }
+
+    public async Task<Game?> GetById(long id)
+    {
+        return await _dbContext.Games
+            .AsNoTracking()
+            .Include(game => game.Category)
+            .FirstOrDefaultAsync(game => game.Id == id);
+    }
+
+    public async Task<Game?> GetByIdTracked(long id)
+    {
+        return await _dbContext.Games
+            .FirstOrDefaultAsync(game => game.Id == id);
+    }
 }

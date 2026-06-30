@@ -1,5 +1,7 @@
 ﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+using FCG.Catalog.Application.UseCases.Category.GetById;
 using FCG.Catalog.Application.UseCases.Game.GetAll;
+using FCG.Catalog.Application.UseCases.Game.GetById;
 using FCG.Catalog.Application.UseCases.Game.Register;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
@@ -27,7 +29,7 @@ public class GameController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(ResponseCategoriesJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseGamesJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetAllGames(
         [FromServices] IGetAllGamesUseCase useCase,
@@ -39,5 +41,18 @@ public class GameController : ControllerBase
             return Ok(response);
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseGameJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        [FromServices] IGetGameByIdUseCase useCase,
+        [FromRoute] long id)
+    {
+        var response = await useCase.Execute(id);
+
+        return Ok(response);
     }
 }

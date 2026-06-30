@@ -19,6 +19,22 @@ public static class GameExtensions
         };
     }
 
+    public static ResponseGameJson MapToResponse(this Game game)
+    {
+        return new ResponseGameJson
+        {
+            Id = game.Id,
+            Name = game.Name,
+            Description = game.Description,
+            Price = game.Price,
+            Category = new ResponseCategoryJson
+            {
+                Id = game.Category.Id,
+                Name = game.Category.Name
+            }
+        };
+    }
+
     public static GamesFilter MapToDomain(this RequestGetAllGamesJson request)
     {
         return new GamesFilter
