@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.Application.UseCases.Game.Register;
+﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+using FCG.Catalog.Application.UseCases.Game.GetAll;
+using FCG.Catalog.Application.UseCases.Game.Register;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Domain.Enums;
@@ -22,5 +24,20 @@ public class GameController : ControllerBase
         var response = await useCase.Execute(request);
 
         return Created(string.Empty, response);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseCategoriesJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> GetAllGames(
+        [FromServices] IGetAllGamesUseCase useCase,
+        [FromQuery] RequestGetAllGamesJson request)
+    {
+        var response = await useCase.Execute(request);
+
+        if (response.Games.Count != 0)
+            return Ok(response);
+
+        return NoContent();
     }
 }
