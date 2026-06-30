@@ -24,8 +24,4 @@
     <ProjectReference Include="..\FCG.Catalog.Infrastructure\FCG.Catalog.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>
