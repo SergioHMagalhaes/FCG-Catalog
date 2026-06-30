@@ -153,7 +153,7 @@ public class RegisterGameUseCaseTest
     {
         var unitOfWorkBuilder = new UnitOfWorkBuilder();
         var unitOfWork = unitOfWorkBuilder.Build();
-        var repository = new GameRepositoryBuild().Build();
+        var repository = new GameRepositoryBuilder().Build();
         var categoryRepository = new CategoryRepositoryBuilder();
 
         if (request != null)
