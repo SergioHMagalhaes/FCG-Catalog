@@ -45,7 +45,7 @@ public class RegisterCategoryUseCaseTest
 
     private RegisterCategoryUseCase CreateUseCase(string? name = null)
     {
-        var unitOfWork = UnitOfWorkBuilder.Build();
+        var unitOfWork = new UnitOfWorkBuilder().Build();
         var repository = new CategoryRepositoryBuilder();
 
         if (string.IsNullOrWhiteSpace(name) == false)

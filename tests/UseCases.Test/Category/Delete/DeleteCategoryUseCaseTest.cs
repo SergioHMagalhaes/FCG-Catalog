@@ -30,7 +30,7 @@ public class DeleteCategoryUseCaseTest
     private DeleteCategoryUseCase CreateUseCase(FCG.Catalog.Domain.Entities.Category? category = null)
     {
         var repository = new CategoryRepositoryBuilder();
-        var unitOfWork = UnitOfWorkBuilder.Build();
+        var unitOfWork = new UnitOfWorkBuilder().Build();
 
         if(category is not null)
             repository.GetByIdTracked(category);

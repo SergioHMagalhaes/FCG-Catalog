@@ -51,7 +51,7 @@ public class UpdateCategoryUseCaseTest
     private UpdateCategoryUseCase CreateUseCase(FCG.Catalog.Domain.Entities.Category category, string? name = null)
     {
         var repository = new CategoryRepositoryBuilder().GetByIdTracked(category);
-        var unitOfWork = UnitOfWorkBuilder.Build();
+        var unitOfWork = new UnitOfWorkBuilder().Build();
 
         if (string.IsNullOrWhiteSpace(name) == false)
         {
