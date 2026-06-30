@@ -19,6 +19,16 @@ public static class GameExtensions
         };
     }
 
+    public static Game MapToDomain(this RequestGameJson request, Game game)
+    {
+        game.Name = request.Name;
+        game.Description = request.Description;
+        game.CategoryId = request.CategoryId;
+        game.Price = request.Price;
+
+        return game;
+    }
+
     public static ResponseGameJson MapToResponse(this Game game)
     {
         return new ResponseGameJson

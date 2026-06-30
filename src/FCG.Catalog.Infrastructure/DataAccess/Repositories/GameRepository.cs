@@ -57,4 +57,9 @@ internal class GameRepository(ApplicationDbContext context) : IGameRepository
         return await _dbContext.Games
             .FirstOrDefaultAsync(game => game.Id == id);
     }
+
+    public void Update(Game game)
+    {
+        _dbContext.Games.Update(game);
+    }
 }

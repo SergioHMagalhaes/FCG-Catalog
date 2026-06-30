@@ -1,8 +1,10 @@
 ﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
 using FCG.Catalog.Application.UseCases.Category.GetById;
+using FCG.Catalog.Application.UseCases.Category.Update;
 using FCG.Catalog.Application.UseCases.Game.GetAll;
 using FCG.Catalog.Application.UseCases.Game.GetById;
 using FCG.Catalog.Application.UseCases.Game.Register;
+using FCG.Catalog.Application.UseCases.Game.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Domain.Enums;
@@ -54,5 +56,21 @@ public class GameController : ControllerBase
         var response = await useCase.Execute(id);
 
         return Ok(response);
+    }
+
+    [HttpPut]
+    [Authorize(Roles = Roles.ADMIN)]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+    [FromServices] IUpdateGameUseCase useCase,
+    [FromRoute] long id,
+    [FromBody] RequestGameJson request)
+    {
+        await useCase.Execute(id, request);
+
+        return NoContent();
     }
 }
