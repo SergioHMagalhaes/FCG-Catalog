@@ -49,5 +49,13 @@ public class CategoryRepositoryBuilder
         return this;
     }
 
+    public CategoryRepositoryBuilder GetByIdNotFound()
+    {
+        _repository
+            .Setup(repository => repository.GetById(It.IsAny<long>()))
+            .Returns(Task.FromResult<Category?>(null));
+
+        return this;
+    }
     public ICategoryRepository Build() => _repository.Object;
 }

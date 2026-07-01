@@ -1,20 +1,20 @@
 ﻿using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using FCG.Catalog.Application.UseCases.Category.Delete;
-using FCG.Catalog.Application.UseCases.Category.Update;
+using FCG.Catalog.Application.UseCases.Game.Delete;
 using FCG.Catalog.Exception.ExceptionsBase;
 
-namespace UseCases.Test.Category.Delete;
+namespace UseCases.Test.Game.Delete;
 
-public class DeleteCategoryUseCaseTest
+public class DeleteGameUseCaseTest
 {
     [Fact]
     public async Task Success()
     {
-        var category = CategoryBuilder.Build();
-        var useCase = CreateUseCase(category);
+        var game = GameBuilder.Build();
+        var useCase = CreateUseCase(game);
 
-        await useCase.Execute(category.Id);
+        await useCase.Execute(game.Id);
     }
 
     [Fact]
@@ -27,16 +27,16 @@ public class DeleteCategoryUseCaseTest
         await Assert.ThrowsAsync<NotFoundException>(act);
     }
 
-    private DeleteCategoryUseCase CreateUseCase(FCG.Catalog.Domain.Entities.Category? category = null)
+    private DeleteGameUseCase CreateUseCase(FCG.Catalog.Domain.Entities.Game? game = null)
     {
-        var repository = new CategoryRepositoryBuilder();
+        var repository = new GameRepositoryBuilder();
         var unitOfWork = new UnitOfWorkBuilder().Build();
 
-        if(category is not null)
-            repository.GetByIdTracked(category);
+        if (game is not null)
+            repository.GetByIdTracked(game);
         else
             repository.GetByIdTrackedNotFound();
 
-        return new DeleteCategoryUseCase(repository.Build(), unitOfWork);
+        return new DeleteGameUseCase(repository.Build(), unitOfWork);
     }
 }

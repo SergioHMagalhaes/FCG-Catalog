@@ -3,6 +3,11 @@ using FCG.Catalog.Application.UseCases.Category.GetAll;
 using FCG.Catalog.Application.UseCases.Category.GetById;
 using FCG.Catalog.Application.UseCases.Category.Register;
 using FCG.Catalog.Application.UseCases.Category.Update;
+using FCG.Catalog.Application.UseCases.Game.Delete;
+using FCG.Catalog.Application.UseCases.Game.GetAll;
+using FCG.Catalog.Application.UseCases.Game.GetById;
+using FCG.Catalog.Application.UseCases.Game.Register;
+using FCG.Catalog.Application.UseCases.Game.Update;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FCG.Catalog.Application;
@@ -21,6 +26,11 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetCategoryByIdUseCase, GetCategoryByIdUseCase>();
         services.AddScoped<IUpdateCategoryUseCase, UpdateCategoryUseCase>();
         services.AddScoped<IDeleteCategoryUseCase, DeleteCategoryUseCase>();
+        services.AddScoped<IRegisterGameUseCase, RegisterGameUseCase>();
+        services.AddScoped<IGetAllGamesUseCase, GetAllGamesUseCase>();
+        services.AddScoped<IGetGameByIdUseCase, GetGameByIdUseCase>();
+        services.AddScoped<IUpdateGameUseCase, UpdateGameUseCase>();
+        services.AddScoped<IDeleteGameUseCase, DeleteGameUseCase>();
     }
 
 }

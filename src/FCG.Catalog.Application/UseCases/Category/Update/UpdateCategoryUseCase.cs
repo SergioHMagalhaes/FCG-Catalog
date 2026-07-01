@@ -24,7 +24,7 @@ public class UpdateCategoryUseCase : IUpdateCategoryUseCase
 
         var category = await _repository.GetByIdTracked(id);
 
-        if (category == null)
+        if (category is null)
         {
             throw new NotFoundException("Categoria não encontrada.");
         }
