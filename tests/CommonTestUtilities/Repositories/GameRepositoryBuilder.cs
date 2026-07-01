@@ -41,14 +41,27 @@ public class GameRepositoryBuilder
 
     public GameRepositoryBuilder GetById(Game game)
     {
-        _repository.Setup(repository => repository.GetById(game.Id)).ReturnsAsync(game);
+        _repository
+            .Setup(repository => repository.GetById(game.Id))
+            .ReturnsAsync(game);
 
         return this;
     }
 
     public GameRepositoryBuilder GetByIdTracked(Game game)
     {
-        _repository.Setup(repository => repository.GetByIdTracked(game.Id)).ReturnsAsync(game);
+        _repository
+            .Setup(repository => repository.GetByIdTracked(game.Id))
+            .ReturnsAsync(game);
+
+        return this;
+    }
+
+    public GameRepositoryBuilder GetByIdTrackedNotFound()
+    {
+        _repository
+            .Setup(repository => repository.GetByIdTracked(It.IsAny<long>()))
+            .ReturnsAsync((Game?)null);
 
         return this;
     }

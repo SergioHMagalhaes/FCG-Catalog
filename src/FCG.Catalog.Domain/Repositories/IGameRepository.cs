@@ -11,4 +11,5 @@ public interface IGameRepository
     Task<Game?> GetById(long id);
     Task<Game?> GetByIdTracked(long id);
     void Update(Game game);
+    Task Delete(long id);
 }
