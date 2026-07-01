@@ -16,6 +16,13 @@ internal class GameRepository(ApplicationDbContext context) : IGameRepository
         await _dbContext.Games.AddAsync(game);
     }
 
+    public async Task Delete(long id)
+    {
+        var result = await _dbContext.Games.FindAsync(id);
+
+        _dbContext.Games.Remove(result!);
+    }
+
     public async Task<PagedResult<Game>> GetAll(GamesFilter filter)
     {
         var query = _dbContext.Games.AsNoTracking();

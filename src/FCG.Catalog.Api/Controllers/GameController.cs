@@ -1,6 +1,8 @@
-﻿using FCG.Catalog.Application.UseCases.Category.GetAll;
+﻿using FCG.Catalog.Application.UseCases.Category.Delete;
+using FCG.Catalog.Application.UseCases.Category.GetAll;
 using FCG.Catalog.Application.UseCases.Category.GetById;
 using FCG.Catalog.Application.UseCases.Category.Update;
+using FCG.Catalog.Application.UseCases.Game.Delete;
 using FCG.Catalog.Application.UseCases.Game.GetAll;
 using FCG.Catalog.Application.UseCases.Game.GetById;
 using FCG.Catalog.Application.UseCases.Game.Register;
@@ -65,11 +67,25 @@ public class GameController : ControllerBase
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(
-    [FromServices] IUpdateGameUseCase useCase,
-    [FromRoute] long id,
-    [FromBody] RequestGameJson request)
+        [FromServices] IUpdateGameUseCase useCase,
+        [FromRoute] long id,
+        [FromBody] RequestGameJson request)
     {
         await useCase.Execute(id, request);
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Authorize(Roles = Roles.ADMIN)]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        [FromServices] IDeleteGameUseCase useCase,
+        [FromRoute] long id)
+    {
+        await useCase.Execute(id);
 
         return NoContent();
     }

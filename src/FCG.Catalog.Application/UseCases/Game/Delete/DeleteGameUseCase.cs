@@ -1,4 +1,5 @@
 ﻿using FCG.Catalog.Domain.Repositories;
+using FCG.Catalog.Exception.ExceptionsBase;
 
 namespace FCG.Catalog.Application.UseCases.Game.Delete;
 
@@ -14,8 +15,14 @@ public class DeleteGameUseCase : IDeleteGameUseCase
         _unitOfWork = unitOfWork;
     }
 
-    public Task Execute(long id)
+    public async Task Execute(long id)
     {
-        throw new NotImplementedException();
+        var game = await _repository.GetByIdTracked(id);
+
+        if (game == null)
+            throw new NotFoundException("Jogo não encontrado.");
+
+        await _repository.Delete(id);
+        await _unitOfWork.Commit();
     }
 }
