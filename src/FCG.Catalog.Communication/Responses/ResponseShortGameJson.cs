@@ -3,6 +3,7 @@
 public class ResponseShortGameJson
 {
     public long Id { get; set; }
+    public Guid ExternalId { get; set; }
     public string Name { get; set; } = string.Empty;
     public decimal Price { get; set; }
 }
