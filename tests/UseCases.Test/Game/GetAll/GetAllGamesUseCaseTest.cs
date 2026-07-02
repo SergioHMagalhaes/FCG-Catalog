@@ -1,7 +1,7 @@
 using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
-using FCG.Catalog.Application.UseCases.Game.GetAll;
+using FCG.Catalog.Application.UseCases.Games.GetAll;
 using FCG.Catalog.Domain.Shared.Filters;
 using FCG.Catalog.Domain.Shared.Pagination;
 

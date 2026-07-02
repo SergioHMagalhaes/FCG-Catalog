@@ -1,6 +1,6 @@
 ﻿using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
-using FCG.Catalog.Application.UseCases.Category.Register;
+using FCG.Catalog.Application.UseCases.Categories.Register;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Exception.ExceptionsBase;
 

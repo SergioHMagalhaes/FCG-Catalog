@@ -1,6 +1,6 @@
 ﻿using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
-using FCG.Catalog.Application.UseCases.Category.GetById;
+using FCG.Catalog.Application.UseCases.Categories.GetById;
 using FCG.Catalog.Communication.Responses;
 
 using FCG.Catalog.Exception.ExceptionsBase;
