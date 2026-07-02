@@ -14,6 +14,17 @@ public class GameOrder
     public DateTime CreatedOn { get; set; }
     public DateTime? ProcessedOn { get; set; }
 
+    private GameOrder() {}
+    public GameOrder(Game game, Guid userId)
+    {
+        OrderId = Guid.NewGuid();
+        GameId = game.Id;
+        Price = game.Price;
+        UserId = userId;
+        Status = GameOrderStatus.Pending;
+        CreatedOn = DateTime.UtcNow;
+    }
+
     public void Approve()
     {
         Status = GameOrderStatus.Approved;

@@ -1,5 +1,7 @@
 using FCG.Catalog.Api.Filters;
+using FCG.Catalog.Api.Token;
 using FCG.Catalog.Application;
+using FCG.Catalog.Domain.Tokens;
 using FCG.Catalog.Infrastructure;
 using FCG.Catalog.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -44,6 +46,10 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services.AddScoped<ITokenProvider, HttpContextTokenValue>();
+
+builder.Services.AddHttpContextAccessor();
 
 var signingKey = builder.Configuration.GetValue<string>("Settings:Jwt:SigningKey");
 
