@@ -1,4 +1,5 @@
 ﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Messaging;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using CommonTestUtilities.Services;
@@ -14,6 +15,7 @@ internal class Sut
 {
     public required PlaceGameOrderUseCase UseCase;
     public required UnitOfWorkBuilder UnitOfWork;
+    public required EventPublisherBuilder EventPublisher;
 }
 
 public class PlaceGameOrderUseCaseTest
@@ -54,6 +56,8 @@ public class PlaceGameOrderUseCaseTest
         async Task<ResponseGameOrderJson> act() => await sut.UseCase.Execute(request);
 
         await Assert.ThrowsAsync<ErrorOnValidationException>(act);
+        sut.UnitOfWork.VerifyCommitNever();
+        sut.EventPublisher.VerifyPublishNever();
     }
 
     [Fact]
@@ -66,6 +70,7 @@ public class PlaceGameOrderUseCaseTest
 
         await Assert.ThrowsAsync<ErrorOnValidationException>(act);
         sut.UnitOfWork.VerifyCommitNever();
+        sut.EventPublisher.VerifyPublishNever();
     }
 
     [Fact]
@@ -79,6 +84,20 @@ public class PlaceGameOrderUseCaseTest
         var act = async () => await sut.UseCase.Execute(request);
 
         await Assert.ThrowsAsync<ErrorOnValidationException>(act);
+        sut.UnitOfWork.VerifyCommitNever();
+        sut.EventPublisher.VerifyPublishNever();
+    }
+
+    [Fact]
+    public async Task Success_Should_Publish_Game_Order_Placed_Event()
+    {
+        var request = RequestPlaceGameOrderJsonBuilder.Build();
+        var game = GameBuilder.Build();
+        var sut = CreateSut(request, game);
+
+        await sut.UseCase.Execute(request);
+
+        sut.EventPublisher.VerifyPublishOrderPlacedEventOnce();
     }
 
     private Sut CreateSut(RequestPlaceGameOrderJson? request = null, FCG.Catalog.Domain.Entities.Game? game = null)
@@ -88,6 +107,7 @@ public class PlaceGameOrderUseCaseTest
         var repository = new GameOrderRepositoryBuilder().Build();
         var gameRepository = new GameRepositoryBuilder();
         var loggedUser = LoggedUserBuilder.Build(request?.GameId ?? Guid.NewGuid());
+        var eventPublisher = new EventPublisherBuilder();
 
 
         if (request != null)
@@ -100,8 +120,9 @@ public class PlaceGameOrderUseCaseTest
 
         return new Sut
         {
-            UseCase = new PlaceGameOrderUseCase(loggedUser, repository, gameRepository.Build(), unitOfWork),
-            UnitOfWork = unitOfWorkBuilder
+            UseCase = new PlaceGameOrderUseCase(loggedUser, eventPublisher.Build(), repository, gameRepository.Build(), unitOfWork),
+            UnitOfWork = unitOfWorkBuilder,
+            EventPublisher = eventPublisher
         };
     }
 }
