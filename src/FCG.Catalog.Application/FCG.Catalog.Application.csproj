@@ -15,6 +15,7 @@
     <ProjectReference Include="..\FCG.Catalog.Communication\FCG.Catalog.Communication.csproj" />
     <ProjectReference Include="..\FCG.Catalog.Domain\FCG.Catalog.Domain.csproj" />
     <ProjectReference Include="..\FCG.Catalog.Exception\FCG.Catalog.Exception.csproj" />
+    <ProjectReference Include="..\FCG.Shared\FCG.Shared.csproj" />
   </ItemGroup>
 
 </Project>
