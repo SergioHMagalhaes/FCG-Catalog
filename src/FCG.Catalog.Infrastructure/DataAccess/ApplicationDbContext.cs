@@ -10,6 +10,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Game> Games { get; set; }
     public DbSet<Category> Categories { get; set; }
+    public DbSet<GameOrder> GameOrders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
