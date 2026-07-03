@@ -31,6 +31,15 @@ public class GameOrderRepositoryBuilder
         return this;
     }
 
+    public GameOrderRepositoryBuilder ExistsActiveOrder(long gameId, Guid userId, bool exists)
+    {
+        _repository
+            .Setup(repository => repository.ExistsActiveOrder(gameId, userId))
+            .ReturnsAsync(exists);
+
+        return this;
+    }
+
     public void VerifyGetByUserId(Guid userId)
     {
         _repository.Verify(repository => repository.GetByUserId(userId), Times.Once);
@@ -39,6 +48,11 @@ public class GameOrderRepositoryBuilder
     public void VerifyGetById(long id, Guid userId)
     {
         _repository.Verify(repository => repository.GetById(id, userId), Times.Once);
+    }
+
+    public void VerifyExistsActiveOrder(long gameId, Guid userId)
+    {
+        _repository.Verify(repository => repository.ExistsActiveOrder(gameId, userId), Times.Once);
     }
 
     public IGameOrderRepository Build() => _repository.Object;
