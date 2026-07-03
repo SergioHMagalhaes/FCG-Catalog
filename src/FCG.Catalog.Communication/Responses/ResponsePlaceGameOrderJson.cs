@@ -2,14 +2,10 @@
 
 namespace FCG.Catalog.Communication.Responses;
 
-public class ResponseGameOrderJson
+public class ResponsePlaceGameOrderJson
 {
-    public long Id { get; set; }
     public Guid OrderId { get; set; }
     public long GameId { get; set; }
     public decimal Price { get; set; }
     public GameOrderStatus Status { get; set; }
-    public DateTime CreatedOn { get; set; }
-    public DateTime? ProcessedOn { get; set; }
-    public ResponseShortGameJson Game { get; set; } = default!;
 }

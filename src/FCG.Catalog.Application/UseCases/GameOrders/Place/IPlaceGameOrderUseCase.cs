@@ -5,5 +5,5 @@ namespace FCG.Catalog.Application.UseCases.GameOrders.Place;
 
 public interface IPlaceGameOrderUseCase
 {
-    Task<ResponseGameOrderJson> Execute(RequestPlaceGameOrderJson request);
+    Task<ResponsePlaceGameOrderJson> Execute(RequestPlaceGameOrderJson request);
 }

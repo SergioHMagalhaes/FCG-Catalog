@@ -1,6 +1,7 @@
-﻿using FCG.Catalog.Application.UseCases.GameOrders.GetUserOrders;
+﻿using FCG.Catalog.Application.UseCases.GameOrders.GetById;
+using FCG.Catalog.Application.UseCases.GameOrders.GetUserOrders;
 using FCG.Catalog.Application.UseCases.GameOrders.Place;
-using FCG.Catalog.Application.UseCases.Games.GetAll;
+using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +27,7 @@ public class GameOrdersController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(ResponseGameOrdersJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponsePlaceGameOrderJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> getUserOrders(
         [FromServices] IGetUserGamerOrderUseCase useCase)
@@ -37,5 +38,18 @@ public class GameOrdersController : ControllerBase
             return Ok(response);
 
         return NoContent();
+    }
+
+    [HttpGet]
+    [Route("{id}")]
+    [ProducesResponseType(typeof(ResponseGameOrdersJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetById(
+        [FromServices] IGetGameOrderByIdUseCase useCase,
+        [FromRoute] long id)
+    {
+        var response = await useCase.Execute(id);
+
+        return Ok(response);
     }
 }

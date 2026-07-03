@@ -6,9 +6,9 @@ namespace FCG.Catalog.Application.Extensions;
 
 public static class GameOrderExtensions
 {
-    public static ResponseGameOrderJson MapToResponse(this GameOrder gameOrder)
+    public static ResponsePlaceGameOrderJson MapToResponse(this GameOrder gameOrder)
     {
-        return new ResponseGameOrderJson
+        return new ResponsePlaceGameOrderJson
         {
             OrderId = gameOrder.OrderId,
             GameId = gameOrder.GameId,
@@ -41,6 +41,27 @@ public static class GameOrderExtensions
                 GameId = o.GameId,
                 Status = (Communication.Enums.GameOrderStatus)o.Status
             }).ToList()
+        };
+    }
+
+    public static ResponseGameOrderJson MapToGameOrderResponse(this GameOrder gameOrder)
+    {
+        return new ResponseGameOrderJson
+        {
+            Id = gameOrder.Id,
+            OrderId = gameOrder.OrderId,
+            GameId = gameOrder.GameId,
+            Status = (Communication.Enums.GameOrderStatus)gameOrder.Status,
+            Price = gameOrder.Price,
+            CreatedOn = gameOrder.CreatedOn,
+            ProcessedOn = gameOrder.ProcessedOn,
+            Game = new ResponseShortGameJson
+            {
+                Id = gameOrder.Game.Id,
+                ExternalId = gameOrder.Game.ExternalId,
+                Name = gameOrder.Game.Name,
+                Price = gameOrder.Game.Price
+            }
         };
     }
 }

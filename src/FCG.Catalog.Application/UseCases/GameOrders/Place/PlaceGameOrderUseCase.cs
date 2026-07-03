@@ -30,7 +30,7 @@ public class PlaceGameOrderUseCase : IPlaceGameOrderUseCase
         _gameRepository = gameRepository;
         _unitOfWork = unitOfWork;
     }
-    public async Task<ResponseGameOrderJson> Execute(RequestPlaceGameOrderJson request)
+    public async Task<ResponsePlaceGameOrderJson> Execute(RequestPlaceGameOrderJson request)
     {
         var game = await _gameRepository.GetByExternalId(request.GameId);
         await Validate(request, game);

@@ -1,8 +1,4 @@
-﻿using FCG.Catalog.Application.UseCases.Categories.Delete;
-using FCG.Catalog.Application.UseCases.Categories.GetAll;
-using FCG.Catalog.Application.UseCases.Categories.GetById;
-using FCG.Catalog.Application.UseCases.Categories.Update;
-using FCG.Catalog.Application.UseCases.Games.Delete;
+﻿using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Application.UseCases.Games.GetAll;
 using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.Register;
