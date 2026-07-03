@@ -9,6 +9,7 @@ public interface IGameRepository
     Task Add(Game game);
     Task<PagedResult<Game>> GetAll(GamesFilter filter);
     Task<Game?> GetById(long id);
+    Task<Game?> GetByExternalId(Guid externalId);
     Task<Game?> GetByIdTracked(long id);
     void Update(Game game);
     Task Delete(long id);

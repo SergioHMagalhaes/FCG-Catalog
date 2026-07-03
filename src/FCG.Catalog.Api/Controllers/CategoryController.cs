@@ -1,8 +1,8 @@
-﻿using FCG.Catalog.Application.UseCases.Category.Delete;
-using FCG.Catalog.Application.UseCases.Category.GetAll;
-using FCG.Catalog.Application.UseCases.Category.GetById;
-using FCG.Catalog.Application.UseCases.Category.Register;
-using FCG.Catalog.Application.UseCases.Category.Update;
+﻿using FCG.Catalog.Application.UseCases.Categories.Delete;
+using FCG.Catalog.Application.UseCases.Categories.GetAll;
+using FCG.Catalog.Application.UseCases.Categories.GetById;
+using FCG.Catalog.Application.UseCases.Categories.Register;
+using FCG.Catalog.Application.UseCases.Categories.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Domain.Enums;

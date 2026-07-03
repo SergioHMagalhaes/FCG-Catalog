@@ -34,6 +34,7 @@ public static class GameExtensions
         return new ResponseGameJson
         {
             Id = game.Id,
+            ExternalId = game.ExternalId,
             Name = game.Name,
             Description = game.Description,
             Price = game.Price,
@@ -64,6 +65,7 @@ public static class GameExtensions
             Games = pagedResult.Items.Select(game => new ResponseShortGameJson
             {
                 Id = game.Id,
+                ExternalId = game.ExternalId,
                 Name = game.Name,
                 Price = game.Price
             }).ToList(),

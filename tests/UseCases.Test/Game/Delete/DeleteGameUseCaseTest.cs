@@ -1,7 +1,6 @@
 ﻿using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
-using FCG.Catalog.Application.UseCases.Category.Delete;
-using FCG.Catalog.Application.UseCases.Game.Delete;
+using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Exception.ExceptionsBase;
 
 namespace UseCases.Test.Game.Delete;

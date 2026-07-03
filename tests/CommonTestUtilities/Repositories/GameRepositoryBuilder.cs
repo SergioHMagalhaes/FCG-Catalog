@@ -48,6 +48,15 @@ public class GameRepositoryBuilder
         return this;
     }
 
+    public GameRepositoryBuilder GetByExternalId(Game game)
+    {
+        _repository
+            .Setup(repository => repository.GetByExternalId(game.ExternalId))
+            .ReturnsAsync(game);
+
+        return this;
+    }
+
     public GameRepositoryBuilder GetByIdTracked(Game game)
     {
         _repository

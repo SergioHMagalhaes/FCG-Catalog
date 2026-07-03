@@ -1,6 +1,6 @@
 ﻿using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
-using FCG.Catalog.Application.UseCases.Category.GetAll;
+using FCG.Catalog.Application.UseCases.Categories.GetAll;
 
 namespace UseCases.Test.Category.GetAll;
 

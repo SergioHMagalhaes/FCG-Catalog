@@ -1,0 +1,9 @@
+﻿namespace FCG.Catalog.Infrastructure.Settings;
+
+public class JwtSettings
+{
+    public const string SectionName = "Jwt";
+
+    public string SigningKey { get; set; } = string.Empty;
+    public string Issuer { get; set; } = string.Empty;
+}

@@ -1,13 +1,16 @@
-﻿using FCG.Catalog.Application.UseCases.Category.Delete;
-using FCG.Catalog.Application.UseCases.Category.GetAll;
-using FCG.Catalog.Application.UseCases.Category.GetById;
-using FCG.Catalog.Application.UseCases.Category.Register;
-using FCG.Catalog.Application.UseCases.Category.Update;
-using FCG.Catalog.Application.UseCases.Game.Delete;
-using FCG.Catalog.Application.UseCases.Game.GetAll;
-using FCG.Catalog.Application.UseCases.Game.GetById;
-using FCG.Catalog.Application.UseCases.Game.Register;
-using FCG.Catalog.Application.UseCases.Game.Update;
+﻿using FCG.Catalog.Application.UseCases.Categories.Delete;
+using FCG.Catalog.Application.UseCases.Categories.GetAll;
+using FCG.Catalog.Application.UseCases.Categories.GetById;
+using FCG.Catalog.Application.UseCases.Categories.Register;
+using FCG.Catalog.Application.UseCases.Categories.Update;
+using FCG.Catalog.Application.UseCases.GameOrders.GetById;
+using FCG.Catalog.Application.UseCases.GameOrders.GetUserOrders;
+using FCG.Catalog.Application.UseCases.GameOrders.Place;
+using FCG.Catalog.Application.UseCases.Games.Delete;
+using FCG.Catalog.Application.UseCases.Games.GetAll;
+using FCG.Catalog.Application.UseCases.Games.GetById;
+using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Update;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FCG.Catalog.Application;
@@ -31,6 +34,9 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetGameByIdUseCase, GetGameByIdUseCase>();
         services.AddScoped<IUpdateGameUseCase, UpdateGameUseCase>();
         services.AddScoped<IDeleteGameUseCase, DeleteGameUseCase>();
+        services.AddScoped<IPlaceGameOrderUseCase, PlaceGameOrderUseCase>();
+        services.AddScoped<IGetUserGamerOrderUseCase, GetUserGamerOrderUseCase>();
+        services.AddScoped<IGetGameOrderByIdUseCase, GetGameOrderByIdUseCase>();
     }
 
 }

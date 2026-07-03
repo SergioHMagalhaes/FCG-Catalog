@@ -1,10 +1,7 @@
-﻿using Bogus.DataSets;
-using CommonTestUtilities.Entities;
+﻿using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
-using FCG.Catalog.Application.UseCases.Category.GetById;
-using FCG.Catalog.Application.UseCases.Category.Update;
-using FCG.Catalog.Communication.Responses;
+using FCG.Catalog.Application.UseCases.Categories.Update;
 using FCG.Catalog.Exception.ExceptionsBase;
 
 namespace UseCases.Test.Category.Update;

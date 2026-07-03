@@ -1,12 +1,8 @@
-﻿using FCG.Catalog.Application.UseCases.Category.Delete;
-using FCG.Catalog.Application.UseCases.Category.GetAll;
-using FCG.Catalog.Application.UseCases.Category.GetById;
-using FCG.Catalog.Application.UseCases.Category.Update;
-using FCG.Catalog.Application.UseCases.Game.Delete;
-using FCG.Catalog.Application.UseCases.Game.GetAll;
-using FCG.Catalog.Application.UseCases.Game.GetById;
-using FCG.Catalog.Application.UseCases.Game.Register;
-using FCG.Catalog.Application.UseCases.Game.Update;
+﻿using FCG.Catalog.Application.UseCases.Games.Delete;
+using FCG.Catalog.Application.UseCases.Games.GetAll;
+using FCG.Catalog.Application.UseCases.Games.GetById;
+using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Domain.Enums;
