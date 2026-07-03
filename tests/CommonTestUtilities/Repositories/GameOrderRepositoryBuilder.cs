@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Repositories;
+using FCG.Catalog.Domain.Entities;
+using FCG.Catalog.Domain.Repositories;
 using Moq;
 
 namespace CommonTestUtilities.Repositories;
@@ -10,6 +11,20 @@ public class GameOrderRepositoryBuilder
     public GameOrderRepositoryBuilder()
     {
         _repository = new Mock<IGameOrderRepository>();
+    }
+
+    public GameOrderRepositoryBuilder GetByUserId(Guid userId, List<GameOrder> gameOrders)
+    {
+        _repository
+            .Setup(repository => repository.GetByUserId(userId))
+            .ReturnsAsync(gameOrders);
+
+        return this;
+    }
+
+    public void VerifyGetByUserId(Guid userId)
+    {
+        _repository.Verify(repository => repository.GetByUserId(userId), Times.Once);
     }
 
     public IGameOrderRepository Build() => _repository.Object;
