@@ -53,7 +53,7 @@ public class PlaceGameOrderUseCaseTest
         var request = RequestPlaceGameOrderJsonBuilder.Build();
         var sut = CreateSut();
 
-        async Task<ResponseGameOrderJson> act() => await sut.UseCase.Execute(request);
+        async Task<ResponsePlaceGameOrderJson> act() => await sut.UseCase.Execute(request);
 
         await Assert.ThrowsAsync<ErrorOnValidationException>(act);
         sut.UnitOfWork.VerifyCommitNever();
@@ -66,7 +66,7 @@ public class PlaceGameOrderUseCaseTest
         var request = RequestPlaceGameOrderJsonBuilder.Build();
         var sut = CreateSut();
 
-        async Task<ResponseGameOrderJson> act() => await sut.UseCase.Execute(request);
+        async Task<ResponsePlaceGameOrderJson> act() => await sut.UseCase.Execute(request);
 
         await Assert.ThrowsAsync<ErrorOnValidationException>(act);
         sut.UnitOfWork.VerifyCommitNever();

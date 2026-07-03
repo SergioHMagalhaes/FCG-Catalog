@@ -30,6 +30,7 @@ public class GameOrderBuilder
     {
         return new Faker<GameOrder>()
             .CustomInstantiator(_ => new GameOrder(game, userId))
+            .RuleFor(gameOrder => gameOrder.Game, _ => game)
             .RuleFor(gameOrder => gameOrder.Id, f => f.Random.Long(1, 1000))
             .RuleFor(gameOrder => gameOrder.Status, f => f.PickRandom<GameOrderStatus>());
     }

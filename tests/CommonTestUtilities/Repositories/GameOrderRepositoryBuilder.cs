@@ -22,9 +22,23 @@ public class GameOrderRepositoryBuilder
         return this;
     }
 
+    public GameOrderRepositoryBuilder GetById(long id, Guid userId, GameOrder? gameOrder)
+    {
+        _repository
+            .Setup(repository => repository.GetById(id, userId))
+            .ReturnsAsync(gameOrder);
+
+        return this;
+    }
+
     public void VerifyGetByUserId(Guid userId)
     {
         _repository.Verify(repository => repository.GetByUserId(userId), Times.Once);
+    }
+
+    public void VerifyGetById(long id, Guid userId)
+    {
+        _repository.Verify(repository => repository.GetById(id, userId), Times.Once);
     }
 
     public IGameOrderRepository Build() => _repository.Object;
