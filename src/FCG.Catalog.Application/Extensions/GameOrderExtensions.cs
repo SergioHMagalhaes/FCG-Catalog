@@ -29,4 +29,18 @@ public static class GameOrderExtensions
             CreatedOn: gameOrder.CreatedOn
         );
     }
+
+    public static ResponseGameOrdersJson MapToResponse(this IEnumerable<GameOrder> gameOrders)
+    {
+        return new ResponseGameOrdersJson
+        {
+            GameOrders = gameOrders.Select(o => new ResponseShortGameOrdersJson
+            {
+                Id = o.Id,
+                OrderId = o.OrderId,
+                GameId = o.GameId,
+                Status = (Communication.Enums.GameOrderStatus)o.Status
+            }).ToList()
+        };
+    }
 }

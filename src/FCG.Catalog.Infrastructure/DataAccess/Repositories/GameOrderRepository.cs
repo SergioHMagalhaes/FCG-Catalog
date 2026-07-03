@@ -12,4 +12,12 @@ public class GameOrderRepository(ApplicationDbContext context) : IGameOrderRepos
     {
         await _dbContext.GameOrders.AddAsync(gameOrder);
     }
+
+    public async Task<List<GameOrder>> GetByUserId(Guid userId)
+    {
+        return await _dbContext.GameOrders
+            .AsNoTracking()
+            .Where(gameOrder => gameOrder.UserId == userId)
+            .ToListAsync();
+    }
 }

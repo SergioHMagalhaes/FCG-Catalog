@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.Application.UseCases.GameOrders.Place;
+﻿using FCG.Catalog.Application.UseCases.GameOrders.GetUserOrders;
+using FCG.Catalog.Application.UseCases.GameOrders.Place;
+using FCG.Catalog.Application.UseCases.Games.GetAll;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -21,5 +23,19 @@ public class GameOrdersController : ControllerBase
         var response = await useCase.Execute(request);
 
         return Created(string.Empty, response);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseGameOrdersJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> getUserOrders(
+        [FromServices] IGetUserGamerOrderUseCase useCase)
+    {
+        var response = await useCase.Execute();
+
+        if (response.GameOrders.Count != 0)
+            return Ok(response);
+
+        return NoContent();
     }
 }
