@@ -10,7 +10,7 @@ public static class GameOrderExtensions
     {
         return new ResponsePlaceGameOrderJson
         {
-            OrderId = gameOrder.OrderId,
+            ExternalId = gameOrder.ExternalId,
             GameId = gameOrder.GameId,
             Price = gameOrder.Price,
             Status = (Communication.Enums.GameOrderStatus)gameOrder.Status
@@ -21,7 +21,7 @@ public static class GameOrderExtensions
     {
         return new OrderPlacedEvent
         (
-            OrderId: gameOrder.OrderId,
+            OrderId: gameOrder.ExternalId,
             GameId: game.ExternalId,
             GameName: game.Name,
             UserId: gameOrder.UserId,
@@ -37,7 +37,7 @@ public static class GameOrderExtensions
             GameOrders = gameOrders.Select(o => new ResponseShortGameOrdersJson
             {
                 Id = o.Id,
-                OrderId = o.OrderId,
+                ExternalId = o.ExternalId,
                 GameId = o.GameId,
                 Status = (Communication.Enums.GameOrderStatus)o.Status
             }).ToList()
@@ -49,7 +49,7 @@ public static class GameOrderExtensions
         return new ResponseGameOrderJson
         {
             Id = gameOrder.Id,
-            OrderId = gameOrder.OrderId,
+            ExternalId = gameOrder.ExternalId,
             GameId = gameOrder.GameId,
             Status = (Communication.Enums.GameOrderStatus)gameOrder.Status,
             Price = gameOrder.Price,

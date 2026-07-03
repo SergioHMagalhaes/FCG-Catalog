@@ -16,10 +16,10 @@ public class GameOrderMap : IEntityTypeConfiguration<GameOrder>
         builder.Property(order => order.Id)
             .ValueGeneratedOnAdd();
 
-        builder.Property(order => order.OrderId)
+        builder.Property(order => order.ExternalId)
             .IsRequired();
 
-        builder.HasIndex(order => order.OrderId)
+        builder.HasIndex(order => order.ExternalId)
             .IsUnique();
 
         builder.Property(order => order.GameId)

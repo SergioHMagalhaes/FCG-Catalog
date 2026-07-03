@@ -4,7 +4,7 @@ namespace FCG.Catalog.Communication.Responses;
 
 public class ResponsePlaceGameOrderJson
 {
-    public Guid OrderId { get; set; }
+    public Guid ExternalId { get; set; }
     public long GameId { get; set; }
     public decimal Price { get; set; }
     public GameOrderStatus Status { get; set; }

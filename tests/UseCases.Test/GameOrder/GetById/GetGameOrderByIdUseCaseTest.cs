@@ -28,7 +28,7 @@ public class GetGameOrderByIdUseCaseTest
 
         Assert.NotNull(result);
         Assert.Equal(gameOrder.Id, result.Id);
-        Assert.Equal(gameOrder.OrderId, result.OrderId);
+        Assert.Equal(gameOrder.ExternalId, result.ExternalId);
         Assert.Equal(gameOrder.GameId, result.GameId);
         Assert.Equal((FCG.Catalog.Communication.Enums.GameOrderStatus)gameOrder.Status, result.Status);
         Assert.Equal(game.Id, result.Game.Id);
