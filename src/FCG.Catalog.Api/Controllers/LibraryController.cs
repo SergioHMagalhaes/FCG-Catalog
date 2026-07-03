@@ -1,6 +1,7 @@
 ﻿using FCG.Catalog.Application.UseCases.GameOrders.GetUserOrders;
 using FCG.Catalog.Application.UseCases.Libraries.GetUserLibrary;
 using FCG.Catalog.Communication.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FCG.Catalog.Api.Controllers;
@@ -10,7 +11,8 @@ namespace FCG.Catalog.Api.Controllers;
 public class LibraryController : ControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(ResponsePlaceGameOrderJson), StatusCodes.Status200OK)]
+    [Authorize]
+    [ProducesResponseType(typeof(ResponseUserLibraryJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> GetUserLibrary(
         [FromServices] IGetUserLibraryUseCase useCase)
