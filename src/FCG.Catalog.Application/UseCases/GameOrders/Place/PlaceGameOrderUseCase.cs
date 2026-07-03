@@ -33,9 +33,9 @@ public class PlaceGameOrderUseCase : IPlaceGameOrderUseCase
     public async Task<ResponsePlaceGameOrderJson> Execute(RequestPlaceGameOrderJson request)
     {
         var game = await _gameRepository.GetByExternalId(request.GameId);
-        await Validate(request, game);
-
         var userId = _loggedUser.GetId();
+
+        await Validate(request, game, userId);
 
         var gameOrder = new GameOrder(game!, userId);
 
@@ -48,13 +48,25 @@ public class PlaceGameOrderUseCase : IPlaceGameOrderUseCase
         return gameOrder.MapToResponse();
     }
 
-    private async Task Validate(RequestPlaceGameOrderJson request, Game? gameExists)
+    private async Task Validate(RequestPlaceGameOrderJson request, Game? gameExists, Guid userId)
     {
         var result = new PlaceGameOrderValidator().Validate(request);
 
         if (gameExists is null)
         {
             result.Errors.Add(new ValidationFailure(string.Empty, "Jogo não existe."));
+        }
+        else
+        {
+            var activeOrderExists = await _repository.ExistsActiveOrder(gameExists.Id, userId);
+
+            if (activeOrderExists)
+            {
+                result.Errors.Add(new ValidationFailure(
+                    string.Empty,
+                    "Já existe um pedido pendente ou aprovado para este jogo."
+                ));
+            }
         }
 
         if (result.IsValid == false)
