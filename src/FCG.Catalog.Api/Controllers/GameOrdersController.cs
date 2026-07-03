@@ -15,7 +15,7 @@ public class GameOrdersController : ControllerBase
 {
     [HttpPost]
     [Authorize]
-    [ProducesResponseType(typeof(ResponseRegisterdGameJson), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ResponsePlaceGameOrderJson), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> PlaceOrder(
     [FromServices] IPlaceGameOrderUseCase useCase,
@@ -27,7 +27,7 @@ public class GameOrdersController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(ResponsePlaceGameOrderJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseGameOrdersJson), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> getUserOrders(
         [FromServices] IGetUserGamerOrderUseCase useCase)
@@ -42,7 +42,7 @@ public class GameOrdersController : ControllerBase
 
     [HttpGet]
     [Route("{id}")]
-    [ProducesResponseType(typeof(ResponseGameOrdersJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseGameOrderJson), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(
         [FromServices] IGetGameOrderByIdUseCase useCase,
