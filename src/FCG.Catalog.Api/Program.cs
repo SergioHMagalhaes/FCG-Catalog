@@ -3,8 +3,11 @@ using FCG.Catalog.Api.Token;
 using FCG.Catalog.Application;
 using FCG.Catalog.Domain.Tokens;
 using FCG.Catalog.Infrastructure;
+using FCG.Catalog.Infrastructure.DataAccess;
 using FCG.Catalog.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using System.Text;
@@ -68,7 +71,21 @@ builder.Services.AddAuthentication(config =>
     };
 });
 
+builder.Services
+    .AddHealthChecks()
+    .AddDbContextCheck<ApplicationDbContext>();
+
 var app = builder.Build();
+
+app.MapHealthChecks("/Health", new HealthCheckOptions
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
+    {
+        [HealthStatus.Healthy] = StatusCodes.Status200OK,
+        [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable,
+    }
+});
 
 if (app.Environment.IsDevelopment())
 {
