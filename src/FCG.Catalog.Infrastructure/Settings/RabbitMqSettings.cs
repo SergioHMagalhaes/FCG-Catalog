@@ -7,5 +7,4 @@ public class RabbitMqSettings
     public string VirtualHost { get; set; } = "/";
     public string Username { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
-    public string KeyOrderEventPublisher { get; set; } = string.Empty;
 }
