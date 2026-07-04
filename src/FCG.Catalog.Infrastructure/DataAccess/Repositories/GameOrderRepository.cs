@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FCG.Catalog.Infrastructure.DataAccess.Repositories;
 
-public class GameOrderRepository(ApplicationDbContext context) : IGameOrderRepository
+internal class GameOrderRepository(ApplicationDbContext context) : IGameOrderRepository
 {
     private readonly ApplicationDbContext _dbContext = context;
     

@@ -41,6 +41,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IGameOrderRepository, GameOrderRepository>();
+        services.AddScoped<ILibraryRepository, LibraryRepository>();
     }
 
     private static void AddMessaging(IServiceCollection services, IConfiguration configuration)
