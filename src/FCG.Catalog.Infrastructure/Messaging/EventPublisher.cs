@@ -14,11 +14,6 @@ public class EventPublisher : IEventPublisher
 
     public async Task Publish<TEvent>(TEvent @event) where TEvent : class
     {
-        await _publishEndpoint.Publish(@event, context =>
-        {
-            if (@event is OrderPlacedEvent)
-                context.SetRoutingKey("order.placed");
-
-        });
+        await _publishEndpoint.Publish(@event);
     }
 }

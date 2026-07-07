@@ -77,8 +77,6 @@ public static class DependencyInjectionExtension
                         h.Password(rabbitMqSettings.Password);
                     });
 
-                cfg.Publish<OrderPlacedEvent>(p => p.ExchangeType = "topic");
-
                 cfg.ConfigureEndpoints(context);
             });
         });
