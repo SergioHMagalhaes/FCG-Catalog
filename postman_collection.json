@@ -1,0 +1,1303 @@
+{
+  "info": {
+    "_postman_id": "9c2bfca1-6a76-4e54-bb3c-0b769e00c55f",
+    "name": "FCG - Catalog API",
+    "description": "Colecao Postman da FCG Catalog API. API responsavel pelo CRUD de jogos e categorias, consulta de biblioteca do usuario e inicio do fluxo de compra. Use as variaveis baseUrl e token para executar as requisicoes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "https://localhost:5001",
+      "type": "string",
+      "description": "URL base da FCG Catalog API."
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT usado no header Authorization: Bearer {{token}}."
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "description": "Endpoints de saude da aplicacao.",
+      "item": [
+        {
+          "name": "Verificar saude da API",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "description": "Retorna o status de saude da API e do banco de dados.",
+            "url": {
+              "raw": "{{baseUrl}}/Health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "Health"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Healthy",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "Health"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "plain",
+              "header": [],
+              "body": "Healthy"
+            },
+            {
+              "name": "Unhealthy",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/Health",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "Health"
+                  ]
+                }
+              },
+              "status": "Service Unavailable",
+              "code": 503,
+              "_postman_previewlanguage": "plain",
+              "header": [],
+              "body": "Unhealthy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "description": "Endpoints de cadastro, consulta, atualizacao e exclusao de categorias.",
+      "item": [
+        {
+          "name": "Cadastrar categoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Cadastra uma nova categoria. Requer usuario com role ADMIN.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Action\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Category"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Categoria cadastrada",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Action\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"Action\"\n}"
+            },
+            {
+              "name": "Erro de validacao",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"O nome e obrigatorio.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listar categorias",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "description": "Lista todas as categorias cadastradas. Retorna 204 quando nao houver categorias.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Category",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Category"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Categorias encontradas",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"categories\": [\n    {\n      \"id\": 1,\n      \"name\": \"Action\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "Sem categorias",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Obter categoria por ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "description": "Busca uma categoria pelo identificador interno.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Category/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Category",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno da categoria."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Categoria encontrada",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno da categoria."
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"name\": \"Action\"\n}"
+            },
+            {
+              "name": "Categoria nao encontrada",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "999",
+                      "description": "Identificador interno da categoria."
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"Categoria nao encontrada.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Atualizar categoria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Atualiza uma categoria existente. Requer usuario com role ADMIN.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Adventure\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Category/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Category",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno da categoria."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Categoria atualizada",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Adventure\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno da categoria."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Excluir categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Remove uma categoria existente. Requer usuario com role ADMIN.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Category/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Category",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno da categoria."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Categoria excluida",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Category/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Category",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno da categoria."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Game",
+      "description": "Endpoints de cadastro, consulta, atualizacao e exclusao de jogos.",
+      "item": [
+        {
+          "name": "Cadastrar jogo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Cadastra um novo jogo. Requer usuario com role ADMIN.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cyber Quest\",\n  \"description\": \"Adventure game with sci-fi exploration.\",\n  \"price\": 149.90,\n  \"categoryId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Game",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Game"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Jogo cadastrado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Cyber Quest\",\n  \"description\": \"Adventure game with sci-fi exploration.\",\n  \"price\": 149.90,\n  \"categoryId\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Game",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Game"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"name\": \"Cyber Quest\"\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listar jogos",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "description": "Lista jogos com filtros de paginacao, ordenacao e busca. Retorna 204 quando nao houver jogos.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Game?Page=1&PageSize=10&OrderBy=Name&Desc=false&Search=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Game"
+              ],
+              "query": [
+                {
+                  "key": "Page",
+                  "value": "1",
+                  "description": "Pagina consultada. Deve ser maior que 0."
+                },
+                {
+                  "key": "PageSize",
+                  "value": "10",
+                  "description": "Quantidade de itens por pagina. Deve ser maior que 0."
+                },
+                {
+                  "key": "OrderBy",
+                  "value": "Name",
+                  "description": "Campo de ordenacao. Valores permitidos: Name, Price, Category."
+                },
+                {
+                  "key": "Desc",
+                  "value": "false",
+                  "description": "Define se a ordenacao sera decrescente."
+                },
+                {
+                  "key": "Search",
+                  "value": "",
+                  "description": "Termo opcional de busca por jogo."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Jogos encontrados",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Game?Page=1&PageSize=10&OrderBy=Name&Desc=false&Search=",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Game"
+                  ],
+                  "query": [
+                    {
+                      "key": "Page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "PageSize",
+                      "value": "10"
+                    },
+                    {
+                      "key": "OrderBy",
+                      "value": "Name"
+                    },
+                    {
+                      "key": "Desc",
+                      "value": "false"
+                    },
+                    {
+                      "key": "Search",
+                      "value": ""
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"games\": [\n    {\n      \"id\": 1,\n      \"externalId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n      \"name\": \"Cyber Quest\",\n      \"price\": 149.90\n    }\n  ],\n  \"totalCount\": 1,\n  \"page\": 1,\n  \"pageSize\": 10,\n  \"totalPages\": 1,\n  \"hasNextPage\": false,\n  \"hasPreviousPage\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Obter jogo por ID",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "description": "Busca um jogo pelo identificador interno.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Game/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Game",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno do jogo."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Jogo encontrado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Game/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Game",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno do jogo."
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"externalId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n  \"name\": \"Cyber Quest\",\n  \"description\": \"Adventure game with sci-fi exploration.\",\n  \"price\": 149.90,\n  \"category\": {\n    \"id\": 1,\n    \"name\": \"Action\"\n  }\n}"
+            },
+            {
+              "name": "Jogo nao encontrado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Game/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Game",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "999",
+                      "description": "Identificador interno do jogo."
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"Jogo nao encontrado.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Atualizar jogo",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Atualiza um jogo existente. Requer usuario com role ADMIN.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Cyber Quest Deluxe\",\n  \"description\": \"Expanded adventure game with sci-fi exploration.\",\n  \"price\": 179.90,\n  \"categoryId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Game/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Game",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno do jogo."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Jogo atualizado",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Cyber Quest Deluxe\",\n  \"description\": \"Expanded adventure game with sci-fi exploration.\",\n  \"price\": 179.90,\n  \"categoryId\": 1\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Game/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Game",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno do jogo."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Excluir jogo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Remove um jogo existente. Requer usuario com role ADMIN.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Game/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Game",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno do jogo."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Jogo excluido",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Game/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Game",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno do jogo."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GameOrders",
+      "description": "Endpoints de criacao e consulta de pedidos de jogos.",
+      "item": [
+        {
+          "name": "Realizar pedido de jogo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Inicia o fluxo de compra de um jogo para o usuario autenticado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gameId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/GameOrders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "GameOrders"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Pedido criado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"gameId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/GameOrders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "GameOrders"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"externalId\": \"6acff0cb-30d6-4b9f-ae42-f07125b7bb2d\",\n  \"gameId\": 1,\n  \"price\": 149.90,\n  \"status\": \"Pending\"\n}"
+            },
+            {
+              "name": "Erro de validacao",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"gameId\": \"00000000-0000-0000-0000-000000000000\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/GameOrders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "GameOrders"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"O ID do jogo e obrigatorio.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listar pedidos do usuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Lista os pedidos de jogos do usuario autenticado. Retorna 204 quando nao houver pedidos.",
+            "url": {
+              "raw": "{{baseUrl}}/api/GameOrders",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "GameOrders"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Pedidos encontrados",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/GameOrders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "GameOrders"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"gameOrders\": [\n    {\n      \"id\": 1,\n      \"externalId\": \"6acff0cb-30d6-4b9f-ae42-f07125b7bb2d\",\n      \"gameId\": 1,\n      \"status\": \"Pending\"\n    }\n  ]\n}"
+            },
+            {
+              "name": "Sem pedidos",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/GameOrders",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "GameOrders"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        },
+        {
+          "name": "Obter pedido por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Busca um pedido de jogo pelo identificador interno.",
+            "url": {
+              "raw": "{{baseUrl}}/api/GameOrders/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "GameOrders",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "1",
+                  "description": "Identificador interno do pedido de jogo."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Pedido encontrado",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/GameOrders/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "GameOrders",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "1",
+                      "description": "Identificador interno do pedido de jogo."
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"externalId\": \"6acff0cb-30d6-4b9f-ae42-f07125b7bb2d\",\n  \"gameId\": 1,\n  \"price\": 149.90,\n  \"status\": \"Pending\",\n  \"createdOn\": \"2026-07-08T10:30:00Z\",\n  \"processedOn\": null,\n  \"game\": {\n    \"id\": 1,\n    \"externalId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n    \"name\": \"Cyber Quest\",\n    \"price\": 149.90\n  }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Library",
+      "description": "Endpoints de consulta da biblioteca de jogos do usuario.",
+      "item": [
+        {
+          "name": "Obter biblioteca do usuario",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "description": "Retorna a biblioteca de jogos do usuario autenticado.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Library",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Library"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Biblioteca encontrada",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Library",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Library"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"externalId\": \"6fd09742-36a6-4a6c-a572-d1dd18411ec5\",\n  \"userId\": \"7f2920e5-07d5-4d2d-8c91-f2df2f6891b3\",\n  \"games\": [\n    {\n      \"id\": 1,\n      \"externalId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n      \"name\": \"Cyber Quest\",\n      \"price\": 149.90\n    }\n  ]\n}"
+            },
+            {
+              "name": "Sem conteudo",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Library",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Library"
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
