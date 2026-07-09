@@ -14,6 +14,7 @@ COPY ["src/FCG.Catalog.Communication/FCG.Catalog.Communication.csproj", "src/FCG
 COPY ["src/FCG.Catalog.Domain/FCG.Catalog.Domain.csproj", "src/FCG.Catalog.Domain/"]
 COPY ["src/FCG.Catalog.Exception/FCG.Catalog.Exception.csproj", "src/FCG.Catalog.Exception/"]
 COPY ["src/FCG.Catalog.Infrastructure/FCG.Catalog.Infrastructure.csproj", "src/FCG.Catalog.Infrastructure/"]
+COPY ["src/FCG.Shared/FCG.Shared.csproj", "src/FCG.Shared/"]
 RUN dotnet restore "./src/FCG.Catalog.Api/FCG.Catalog.Api.csproj"
 COPY . .
 WORKDIR "/src/src/FCG.Catalog.Api"
