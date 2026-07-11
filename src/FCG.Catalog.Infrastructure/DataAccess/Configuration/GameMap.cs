@@ -15,6 +15,13 @@ internal class GameMap : IEntityTypeConfiguration<Game>
         builder.Property(game => game.Id)
             .ValueGeneratedOnAdd();
 
+        builder.Property(game => game.ExternalId)
+            .IsRequired()
+            .HasDefaultValueSql("gen_random_uuid()");
+
+        builder.HasIndex(game => game.ExternalId)
+            .IsUnique();
+
         builder.Property(game => game.Name)
             .IsRequired()
             .HasMaxLength(100);
