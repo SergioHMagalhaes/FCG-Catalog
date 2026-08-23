@@ -9,3 +9,4 @@ data:
   Jwt__Issuer: "FCGames"
   RabbitMQ__Host: "rabbitmq"
   RabbitMQ__VirtualHost: "/"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://tempo.default:4317"
