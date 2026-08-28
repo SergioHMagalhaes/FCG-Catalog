@@ -1,13 +1,13 @@
 ﻿using FCG.Catalog.Domain.Messaging;
 using FCG.Catalog.Domain.Repositories;
 using FCG.Catalog.Domain.Services.LoggedUser;
-using FCG.Catalog.Infrastructure.DataAccess;
-using FCG.Catalog.Infrastructure.DataAccess.Repositories;
+using FCG.Catalog.Infrastructure.DataAccess.Document;
+using FCG.Catalog.Infrastructure.DataAccess.Relational;
+using FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 using FCG.Catalog.Infrastructure.Messaging;
 using FCG.Catalog.Infrastructure.Services.LoggedUser;
 using FCG.Catalog.Infrastructure.Settings;
 using FCG.Infrastructure.Settings;
-using FCG.Shared.Events;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +23,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<ILoggedUser, LoggedUser>();
 
         AddDbContext(services, configuration);
+        AddMongoDbContext(services, configuration);
         AddRepositories(services);
         AddMessaging(services, configuration);
     }
@@ -33,6 +34,12 @@ public static class DependencyInjectionExtension
 
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseNpgsql(connectionString));
+    }
+
+    private static void AddMongoDbContext(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MongoSettings>(configuration.GetSection("MongoDB"));
+        services.AddSingleton<MongoDbContext>();
     }
 
     private static void AddRepositories(IServiceCollection services)

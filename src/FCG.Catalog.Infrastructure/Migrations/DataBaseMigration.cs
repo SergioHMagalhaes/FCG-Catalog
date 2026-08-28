@@ -1,4 +1,4 @@
-﻿using FCG.Catalog.Infrastructure.DataAccess;
+﻿using FCG.Catalog.Infrastructure.DataAccess.Relational;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

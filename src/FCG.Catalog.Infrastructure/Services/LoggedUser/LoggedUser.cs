@@ -24,4 +24,15 @@ public class LoggedUser : ILoggedUser
 
         return Guid.Parse(identifier);
     }
+
+    public string GetName()
+    {
+        string token = _tokenProvider.TokenOnRequest();
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var jwtSecurityToken = tokenHandler.ReadJwtToken(token);
+
+        return jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
+    }
 }

@@ -3,7 +3,7 @@ using FCG.Catalog.Api.Token;
 using FCG.Catalog.Application;
 using FCG.Catalog.Domain.Tokens;
 using FCG.Catalog.Infrastructure;
-using FCG.Catalog.Infrastructure.DataAccess;
+using FCG.Catalog.Infrastructure.DataAccess.Relational;
 using FCG.Catalog.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
