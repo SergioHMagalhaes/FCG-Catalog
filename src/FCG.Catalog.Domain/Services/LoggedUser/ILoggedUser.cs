@@ -3,4 +3,5 @@
 public interface ILoggedUser
 {
     Guid GetId();
+    string GetName();
 }

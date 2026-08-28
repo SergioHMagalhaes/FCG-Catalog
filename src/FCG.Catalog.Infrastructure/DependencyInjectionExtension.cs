@@ -2,12 +2,14 @@
 using FCG.Catalog.Domain.Repositories;
 using FCG.Catalog.Domain.Services.LoggedUser;
 using FCG.Catalog.Infrastructure.DataAccess.Document;
+using FCG.Catalog.Infrastructure.DataAccess.Document.Repositories;
 using FCG.Catalog.Infrastructure.DataAccess.Relational;
 using FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 using FCG.Catalog.Infrastructure.Messaging;
 using FCG.Catalog.Infrastructure.Services.LoggedUser;
 using FCG.Catalog.Infrastructure.Settings;
 using FCG.Infrastructure.Settings;
+using FCG.Shared.Events;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -49,6 +51,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IGameOrderRepository, GameOrderRepository>();
         services.AddScoped<ILibraryRepository, LibraryRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
     }
 
     private static void AddMessaging(IServiceCollection services, IConfiguration configuration)

@@ -12,6 +12,7 @@ using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Application.UseCases.Libraries.GetUserLibrary;
+using FCG.Catalog.Application.UseCases.Reviews.Register;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FCG.Catalog.Application;
@@ -39,5 +40,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetUserGamerOrderUseCase, GetUserGamerOrderUseCase>();
         services.AddScoped<IGetGameOrderByIdUseCase, GetGameOrderByIdUseCase>();
         services.AddScoped<IGetUserLibraryUseCase, GetUserLibraryUseCase>();
+        services.AddScoped<IRegisterReviewUseCase, RegisterReviewUseCase>();
     }
 }
