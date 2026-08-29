@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Application.UseCases.Reviews.Register;
+﻿using FCG.Catalog.Application.UseCases.Reviews.GetByGameId;
+using FCG.Catalog.Application.UseCases.Reviews.Register;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
 using Microsoft.AspNetCore.Authorization;
@@ -21,5 +22,17 @@ public class ReviewsController : ControllerBase
         var response = await useCase.Execute(request);
 
         return Created(string.Empty, response);
+    }
+
+    [HttpGet]
+    [ProducesResponseType(typeof(ResponseReviewsJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetByGameId(
+        [FromServices] IGetReviewsByGameIdUseCase useCase,
+        [FromQuery] RequestGetReviewByGameIdJson request)
+    {
+        var response = await useCase.Execute(request);
+
+        return Ok(response);
     }
 }
