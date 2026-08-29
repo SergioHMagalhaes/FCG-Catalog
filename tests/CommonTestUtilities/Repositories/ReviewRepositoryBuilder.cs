@@ -49,5 +49,29 @@ public class ReviewRepositoryBuilder
                 && actualFilter.Desc == filter.Desc)), Times.Once);
     }
 
+    public ReviewRepositoryBuilder GetById(Review review)
+    {
+        _repository.Setup(repository => repository.GetById(review.Id)).ReturnsAsync(review);
+
+        return this;
+    }
+
+    public ReviewRepositoryBuilder GetByIdNotFound()
+    {
+        _repository.Setup(repository => repository.GetById(It.IsAny<Guid>())).ReturnsAsync((Review?)null);
+
+        return this;
+    }
+
+    public void VerifyUpdateOnce()
+    {
+        _repository.Verify(repository => repository.Update(It.IsAny<Review>()), Times.Once);
+    }
+
+    public void VerifyUpdateNever()
+    {
+        _repository.Verify(repository => repository.Update(It.IsAny<Review>()), Times.Never);
+    }
+
     public IReviewRepository Build() => _repository.Object;
 }
