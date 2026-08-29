@@ -1,7 +1,10 @@
-﻿using FCG.Catalog.Application.UseCases.Reviews.GetByGameId;
+﻿using FCG.Catalog.Application.UseCases.Games.Update;
+using FCG.Catalog.Application.UseCases.Reviews.GetByGameId;
 using FCG.Catalog.Application.UseCases.Reviews.Register;
+using FCG.Catalog.Application.UseCases.Reviews.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
+using FCG.Catalog.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,5 +37,21 @@ public class ReviewsController : ControllerBase
         var response = await useCase.Execute(request);
 
         return Ok(response);
+    }
+
+    [HttpPut]
+    [Authorize]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Update(
+        [FromServices] IUpdateReviewUseCase useCase,
+        [FromRoute] Guid id,
+        [FromBody] RequestReviewUpdateJson request)
+    {
+        await useCase.Execute(id, request);
+
+        return NoContent();
     }
 }

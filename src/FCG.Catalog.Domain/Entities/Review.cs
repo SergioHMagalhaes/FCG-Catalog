@@ -62,6 +62,22 @@ public class Review
             _tags.Add(tag);
     }
 
+    public void Update(Guid userId, int rating, string comment, IEnumerable<string>? tags = null)
+    {
+        if (userId != UserId)
+            throw new UnauthorizedAccessException("Usuário não autorizado a atualizar esta review.");
+        if (rating < 1 || rating > 5)
+            throw new ArgumentException("Rating deve estar entre 1 e 5.", nameof(rating));
+
+        Rating = rating;
+        Comment = comment;
+
+        _tags.Clear();
+        if (tags != null)
+            foreach (var tag in tags)
+                AddTag(tag);
+    }
+
     public void MarkAsHelpful() => HelpfulVotes++;
 
     public static Review Rehydrate(

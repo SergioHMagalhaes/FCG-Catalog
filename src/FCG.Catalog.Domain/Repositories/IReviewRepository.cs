@@ -9,4 +9,8 @@ public interface IReviewRepository
     Task Add(Review review);
 
     Task<PagedResult<Review>> GetByGameId(ReviewFilter filter);
+
+    Task<Review?> GetById(Guid id);
+
+    void Update(Review review);
 }

@@ -50,4 +50,26 @@ internal class ReviewRepository : IReviewRepository
 
         return new PagedResult<Review>(items, (int)total, filter.Page, filter.PageSize);
     }
+
+    public async Task<Review?> GetById(Guid id)
+    {
+        var filterBuilder = Builders<ReviewDocument>.Filter.Eq(x => x.Id, id);
+        
+        var document = await _collection.Find(filterBuilder).FirstOrDefaultAsync();
+        
+        return document == null ? null : ReviewMapper.ToDomain(document);
+    }
+
+    public void Update(Review review)
+    {
+        var filterBuilder = Builders<ReviewDocument>.Filter.Eq(x => x.Id, review.Id);
+
+        var updateBuilder = Builders<ReviewDocument>.Update
+            .Set(x => x.Rating, review.Rating)
+            .Set(x => x.Comment, review.Comment)
+            .Set(x => x.Tags, review.Tags.ToList())
+            .Set(x => x.HelpfulVotes, review.HelpfulVotes);
+
+        _collection.UpdateOne(filterBuilder, updateBuilder);
+    }
 }
