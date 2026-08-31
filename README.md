@@ -23,13 +23,14 @@ No fluxo de compra, a API recebe a solicitação para adicionar um jogo a biblio
 - CRUD de categorias.
 - CRUD de jogos.
 - Listagem paginada e ordenada de jogos.
+- Cache distribuído com Redis (padrão Cache-Aside e invalidação automática).
 - Criação de pedidos de compra de jogos.
 - Consulta de pedidos do usuário.
 - Consulta de pedido por identificador.
 - Consulta da biblioteca do usuário.
 - Publicação de eventos com RabbitMQ e MassTransit.
 - Persistência com PostgreSQL e Entity Framework Core.
-- Health check em `/Health`.
+- Health check em `/Health` (incluindo status do PostgreSQL, RabbitMQ e Redis).
 - Documentação Swagger em ambiente de desenvolvimento.
 - Manifestos Kubernetes em `k8s/`.
 
@@ -39,6 +40,7 @@ No fluxo de compra, a API recebe a solicitação para adicionar um jogo a biblio
 - ASP.NET Core Web API
 - Entity Framework Core
 - PostgreSQL
+- Redis / StackExchange.Redis
 - RabbitMQ
 - MassTransit
 - JWT Bearer
@@ -56,7 +58,7 @@ src/
   FCG.Catalog.Communication/   # Requests, responses e enums expostos pela API
   FCG.Catalog.Domain/          # Entidades, repositórios, serviços de domínio e contratos
   FCG.Catalog.Exception/       # Exceções de negocio
-  FCG.Catalog.Infrastructure/  # EF Core, PostgreSQL, RabbitMQ e implementações externas
+  FCG.Catalog.Infrastructure/  # EF Core, PostgreSQL, RabbitMQ, Redis e implementações externas
   FCG.Shared/                  # Eventos compartilhados
 tests/
   CommonTestUtilities/         # Builders e utilitários para testes
@@ -69,6 +71,7 @@ k8s/                           # Manifests de Deployment, Service, ConfigMap e S
 - .NET SDK 10 ou superior.
 - Docker e Docker Compose.
 - PostgreSQL, caso nao utilize o `docker-compose.yml` do projeto.
+- Redis, caso nao utilize o `docker-compose.yml` do projeto.
 - RabbitMQ, caso nao utilize o `docker-compose.yml` do projeto.
 - Opcional: Kubernetes local, como Docker Desktop Kubernetes, Kind, Minikube ou k3d.
 
@@ -90,6 +93,11 @@ Em desenvolvimento, as configurações principais estão em `src/FCG.Catalog.Api
     "VirtualHost": "/",
     "Username": "guest",
     "Password": "guest"
+  },
+  "Redis": {
+    "ConnectionString": "localhost:6379",
+    "InstanceName": "fcg:catalog:",
+    "DefaultTtlMinutes": 15
   }
 }
 ```
@@ -105,10 +113,22 @@ Variáveis esperadas:
 | `RabbitMQ__VirtualHost` | Virtual host do RabbitMQ. |
 | `RabbitMQ__Username` | Usuario do RabbitMQ. |
 | `RabbitMQ__Password` | Senha do RabbitMQ. |
+| `Redis__ConnectionString` | Connection string do Redis (ex: `localhost:6379` ou `redis:6379`). |
+| `Redis__InstanceName` | Prefixo/namespace das chaves no Redis (ex: `fcg:catalog:`). |
+| `Redis__DefaultTtlMinutes` | Tempo padrão de expiração do cache em minutos (ex: `15`). |
+
+## Estratégia de Caching com Redis
+
+A aplicação adota o padrão **Cache-Aside** com suporte a **resiliência graciosa** através do `RedisCacheService`:
+
+- **Consultas**: As listagens e consultas por identificador de jogos (`games:*`) e categorias (`categories:*`) consultam primeiramente o Redis. Em caso de *cache miss*, os dados são buscados no PostgreSQL e gravados no Redis com TTL configurável.
+- **Invalidação**: Operações de mutação (cadastro, atualização e exclusão de jogos ou categorias) invalidam automaticamente as chaves específicas e coleções afetadas via prefixo.
+- **Resiliência e Fallback**: Se o Redis estiver offline ou ocorrer falha de conectividade, a aplicação efetua fallback transparente para o banco de dados sem interromper as requisições, registrando logs de aviso (*warning*).
+- **Health Check**: A integridade do Redis é monitorada e reportada no endpoint `/Health`.
 
 ## Executando localmente
 
-Suba as dependências locais de banco e mensageria:
+Suba as dependências locais de banco, cache e mensageria:
 
 ```bash
 docker compose -f src/FCG.Catalog.Api/docker-compose.yml up -d
@@ -150,7 +170,9 @@ docker run --rm -p 8080:8080 \
   -e RabbitMQ__VirtualHost="/" \
   -e RabbitMQ__Username="rabbitmq" \
   -e RabbitMQ__Password="rabbitmq" \
-  -e RabbitMQ__KeyOrderEventPublisher="order.placed" \
+  -e Redis__ConnectionString="host.docker.internal:6379" \
+  -e Redis__InstanceName="fcg:catalog:" \
+  -e Redis__DefaultTtlMinutes="15" \
   fcg-catalog-api
 ```
 
@@ -171,6 +193,20 @@ stringData:
   Jwt__SigningKey: "sua-chave-jwt"
   RabbitMQ__Username: "guest"
   RabbitMQ__Password: "guest"
+```
+
+As configurações não sensíveis (incluindo host do RabbitMQ e Redis) são definidas em `k8s/catalog-api-configmap.yaml`:
+
+```yaml
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:8080"
+  Jwt__Issuer: "FCGames"
+  RabbitMQ__Host: "rabbitmq"
+  RabbitMQ__VirtualHost: "/"
+  Redis__ConnectionString: "redis:6379"
+  Redis__InstanceName: "fcg:catalog:"
+  Redis__DefaultTtlMinutes: "15"
 ```
 
 Aplicação dos manifests:
