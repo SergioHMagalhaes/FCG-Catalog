@@ -71,9 +71,15 @@ builder.Services.AddAuthentication(config =>
     };
 });
 
-builder.Services
+var healthChecksBuilder = builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<ApplicationDbContext>();
+
+var redisConnectionString = builder.Configuration.GetValue<string>("Redis:ConnectionString");
+if (!string.IsNullOrWhiteSpace(redisConnectionString))
+{
+    healthChecksBuilder.AddRedis(redisConnectionString, name: "redis");
+}
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using FCG.Catalog.Application.UseCases.Categories.Update;
@@ -55,6 +55,6 @@ public class UpdateCategoryUseCaseTest
             repository.ExistCategoryWithName(name);
         }
 
-        return new UpdateCategoryUseCase(repository.Build(), unitOfWork);
+        return new UpdateCategoryUseCase(repository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build());
     }
 }

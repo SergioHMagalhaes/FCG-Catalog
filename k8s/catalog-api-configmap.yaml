@@ -9,3 +9,7 @@ data:
   Jwt__Issuer: "FCGames"
   RabbitMQ__Host: "rabbitmq"
   RabbitMQ__VirtualHost: "/"
+
+  Redis__ConnectionString: "redis:6379"
+  Redis__InstanceName: "fcg:catalog:"
+  Redis__DefaultTtlMinutes: "15"
