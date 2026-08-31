@@ -109,7 +109,7 @@ public class GetAllGamesUseCaseTest
 
         return new CreateGetAllGameUseCase
         {
-            UseCase = new GetAllGamesUseCase(repository.Build()),
+            UseCase = new GetAllGamesUseCase(repository.Build(), CommonTestUtilities.Services.CacheServiceBuilder.Build()),
             Repository = repository,
             Filter = filter
         };

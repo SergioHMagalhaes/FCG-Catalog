@@ -1,6 +1,8 @@
-﻿using FCG.Catalog.Application.Extensions;
+using FCG.Catalog.Application.Extensions;
 using FCG.Catalog.Communication.Requests;
+using FCG.Catalog.Domain.Constants;
 using FCG.Catalog.Domain.Repositories;
+using FCG.Catalog.Domain.Services.Caching;
 using FCG.Catalog.Exception.ExceptionsBase;
 using FluentValidation.Results;
 
@@ -10,12 +12,16 @@ public class UpdateCategoryUseCase : IUpdateCategoryUseCase
 {
     private readonly ICategoryRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
+
     public UpdateCategoryUseCase(
         ICategoryRepository repository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ICacheService cacheService)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task Execute(long id, RequestCategoryJson request)
@@ -31,6 +37,10 @@ public class UpdateCategoryUseCase : IUpdateCategoryUseCase
 
         _repository.Update(request.MapToDomain(category));
         await _unitOfWork.Commit();
+
+        await _cacheService.RemoveAsync(CacheKeys.Categories.ById(id));
+        await _cacheService.RemoveAsync(CacheKeys.Categories.All);
+        await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.ListPrefix);
     }
 
     private async Task Validate(RequestCategoryJson request)

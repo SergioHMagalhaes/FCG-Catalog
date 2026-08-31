@@ -1,5 +1,6 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
+using CommonTestUtilities.Services;
 using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Exception.ExceptionsBase;
 
@@ -30,12 +31,13 @@ public class DeleteGameUseCaseTest
     {
         var repository = new GameRepositoryBuilder();
         var unitOfWork = new UnitOfWorkBuilder().Build();
+        var cacheService = CacheServiceBuilder.Build();
 
         if (game is not null)
             repository.GetByIdTracked(game);
         else
             repository.GetByIdTrackedNotFound();
 
-        return new DeleteGameUseCase(repository.Build(), unitOfWork);
+        return new DeleteGameUseCase(repository.Build(), unitOfWork, cacheService);
     }
 }
