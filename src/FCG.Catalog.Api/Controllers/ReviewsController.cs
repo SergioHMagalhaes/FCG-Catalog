@@ -1,12 +1,10 @@
-﻿using FCG.Catalog.Application.UseCases.Games.Delete;
-using FCG.Catalog.Application.UseCases.Games.Update;
-using FCG.Catalog.Application.UseCases.Reviews.Delete;
+﻿using FCG.Catalog.Application.UseCases.Reviews.Delete;
 using FCG.Catalog.Application.UseCases.Reviews.GetByGameId;
+using FCG.Catalog.Application.UseCases.Reviews.MarkHelpfulVotes;
 using FCG.Catalog.Application.UseCases.Reviews.Register;
 using FCG.Catalog.Application.UseCases.Reviews.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
-using FCG.Catalog.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,6 +37,21 @@ public class ReviewsController : ControllerBase
         var response = await useCase.Execute(request);
 
         return Ok(response);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [Route("{reviewId}/helpful-votes")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> MarkHelpfulVotes(
+        [FromServices] IMarkHelpfulVotesUseCase useCase,
+        [FromRoute] Guid reviewId)
+    {
+        await useCase.Execute(reviewId);
+
+        return NoContent();
     }
 
     [HttpPut]
