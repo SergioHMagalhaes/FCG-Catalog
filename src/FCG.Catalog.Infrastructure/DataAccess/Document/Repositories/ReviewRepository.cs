@@ -22,6 +22,13 @@ internal class ReviewRepository : IReviewRepository
         await _collection.InsertOneAsync(ReviewMapper.ToDocument(review));
     }
 
+    public async Task Delete(Guid id)
+    {
+        var filterBuilder = Builders<ReviewDocument>.Filter.Eq(x => x.Id, id);
+
+        await _collection.DeleteOneAsync(filterBuilder);
+    }
+
     public async Task<PagedResult<Review>> GetByGameId(ReviewFilter filter)
     {
         var filterBuilder = Builders<ReviewDocument>.Filter.Eq(x => x.GameId, filter.GameId);

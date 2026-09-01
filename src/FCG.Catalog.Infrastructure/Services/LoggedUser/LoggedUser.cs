@@ -1,4 +1,5 @@
-﻿using FCG.Catalog.Domain.Services.LoggedUser;
+﻿using FCG.Catalog.Domain.Enums;
+using FCG.Catalog.Domain.Services.LoggedUser;
 using FCG.Catalog.Domain.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -35,4 +36,17 @@ public class LoggedUser : ILoggedUser
 
         return jwtSecurityToken.Claims.First(claim => claim.Type == ClaimTypes.Name).Value;
     }
+
+    public bool IsAdmin()
+    {
+        string token = _tokenProvider.TokenOnRequest();
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwtSecurityToken = tokenHandler.ReadJwtToken(token);
+
+        var roleClaim = jwtSecurityToken.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Role);
+
+        return roleClaim != null && roleClaim.Value == Roles.ADMIN;
+    }
+
+
 }

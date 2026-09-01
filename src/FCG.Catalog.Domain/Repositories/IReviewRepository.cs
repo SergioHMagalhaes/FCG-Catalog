@@ -13,4 +13,6 @@ public interface IReviewRepository
     Task<Review?> GetById(Guid id);
 
     void Update(Review review);
+
+    Task Delete(Guid id);
 }

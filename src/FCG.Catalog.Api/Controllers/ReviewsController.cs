@@ -1,4 +1,6 @@
-﻿using FCG.Catalog.Application.UseCases.Games.Update;
+﻿using FCG.Catalog.Application.UseCases.Games.Delete;
+using FCG.Catalog.Application.UseCases.Games.Update;
+using FCG.Catalog.Application.UseCases.Reviews.Delete;
 using FCG.Catalog.Application.UseCases.Reviews.GetByGameId;
 using FCG.Catalog.Application.UseCases.Reviews.Register;
 using FCG.Catalog.Application.UseCases.Reviews.Update;
@@ -51,6 +53,20 @@ public class ReviewsController : ControllerBase
         [FromBody] RequestReviewUpdateJson request)
     {
         await useCase.Execute(id, request);
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    [Authorize]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> Delete(
+        [FromServices] IDeleteReviewUseCase useCase,
+        [FromRoute] Guid id)
+    {
+        await useCase.Execute(id);
 
         return NoContent();
     }

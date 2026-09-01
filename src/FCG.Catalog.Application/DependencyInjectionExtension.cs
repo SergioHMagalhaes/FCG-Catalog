@@ -12,6 +12,7 @@ using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Application.UseCases.Libraries.GetUserLibrary;
+using FCG.Catalog.Application.UseCases.Reviews.Delete;
 using FCG.Catalog.Application.UseCases.Reviews.GetByGameId;
 using FCG.Catalog.Application.UseCases.Reviews.Register;
 using FCG.Catalog.Application.UseCases.Reviews.Update;
@@ -45,5 +46,6 @@ public static class DependencyInjectionExtension
         services.AddScoped<IRegisterReviewUseCase, RegisterReviewUseCase>();
         services.AddScoped<IGetReviewsByGameIdUseCase, GetReviewsByGameIdUseCase>();
         services.AddScoped<IUpdateReviewUseCase, UpdateReviewUseCase>();
+        services.AddScoped<IDeleteReviewUseCase, DeleteReviewUseCase>();
     }
 }
