@@ -73,5 +73,15 @@ public class ReviewRepositoryBuilder
         _repository.Verify(repository => repository.Update(It.IsAny<Review>()), Times.Never);
     }
 
+    public void VerifyDeleteOnce(Guid id)
+    {
+        _repository.Verify(repository => repository.Delete(id), Times.Once);
+    }
+
+    public void VerifyDeleteNever()
+    {
+        _repository.Verify(repository => repository.Delete(It.IsAny<Guid>()), Times.Never);
+    }
+
     public IReviewRepository Build() => _repository.Object;
 }
