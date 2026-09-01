@@ -3,7 +3,7 @@ using FCG.Catalog.Domain.Enums;
 using FCG.Catalog.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCG.Catalog.Infrastructure.DataAccess.Repositories;
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 
 internal class GameOrderRepository(ApplicationDbContext context) : IGameOrderRepository
 {

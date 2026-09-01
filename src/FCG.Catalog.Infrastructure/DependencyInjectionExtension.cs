@@ -1,8 +1,10 @@
 ﻿using FCG.Catalog.Domain.Messaging;
 using FCG.Catalog.Domain.Repositories;
 using FCG.Catalog.Domain.Services.LoggedUser;
-using FCG.Catalog.Infrastructure.DataAccess;
-using FCG.Catalog.Infrastructure.DataAccess.Repositories;
+using FCG.Catalog.Infrastructure.DataAccess.Document;
+using FCG.Catalog.Infrastructure.DataAccess.Document.Repositories;
+using FCG.Catalog.Infrastructure.DataAccess.Relational;
+using FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 using FCG.Catalog.Infrastructure.Messaging;
 using FCG.Catalog.Infrastructure.Services.LoggedUser;
 using FCG.Catalog.Infrastructure.Settings;
@@ -23,6 +25,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<ILoggedUser, LoggedUser>();
 
         AddDbContext(services, configuration);
+        AddMongoDbContext(services, configuration);
         AddRepositories(services);
         AddMessaging(services, configuration);
     }
@@ -35,6 +38,12 @@ public static class DependencyInjectionExtension
             options.UseNpgsql(connectionString));
     }
 
+    private static void AddMongoDbContext(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<MongoSettings>(configuration.GetSection("MongoDB"));
+        services.AddSingleton<MongoDbContext>();
+    }
+
     private static void AddRepositories(IServiceCollection services)
     {
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -42,6 +51,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IGameOrderRepository, GameOrderRepository>();
         services.AddScoped<ILibraryRepository, LibraryRepository>();
+        services.AddScoped<IReviewRepository, ReviewRepository>();
     }
 
     private static void AddMessaging(IServiceCollection services, IConfiguration configuration)

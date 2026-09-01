@@ -2,7 +2,7 @@
 using FCG.Catalog.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCG.Catalog.Infrastructure.DataAccess.Repositories;
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 
 internal class LibraryRepository(ApplicationDbContext context) : ILibraryRepository
 {

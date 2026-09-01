@@ -3,7 +3,7 @@ using FCG.Catalog.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace FCG.Catalog.Infrastructure.DataAccess.Configuration;
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational.Configuration;
 
 public class GameOrderMap : IEntityTypeConfiguration<GameOrder>
 {
