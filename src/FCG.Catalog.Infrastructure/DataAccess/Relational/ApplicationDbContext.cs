@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace FCG.Catalog.Infrastructure.DataAccess;
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational;
 
 public class ApplicationDbContext : DbContext
 {

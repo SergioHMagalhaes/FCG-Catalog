@@ -5,7 +5,7 @@ using FCG.Catalog.Domain.Shared.Filters;
 using FCG.Catalog.Domain.Shared.Pagination;
 using Microsoft.EntityFrameworkCore;
 
-namespace FCG.Catalog.Infrastructure.DataAccess.Repositories;
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 
 internal class GameRepository(ApplicationDbContext context) : IGameRepository
 {

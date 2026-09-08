@@ -1,6 +1,6 @@
 ﻿using FCG.Catalog.Domain.Repositories;
 
-namespace FCG.Catalog.Infrastructure.DataAccess;
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational;
 
 internal class UnitOfWork(ApplicationDbContext dbContext) : IUnitOfWork
 {
