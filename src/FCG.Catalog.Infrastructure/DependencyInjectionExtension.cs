@@ -1,11 +1,13 @@
-﻿using FCG.Catalog.Domain.Messaging;
+using FCG.Catalog.Domain.Messaging;
 using FCG.Catalog.Domain.Repositories;
+using FCG.Catalog.Domain.Services.Caching;
 using FCG.Catalog.Domain.Services.LoggedUser;
 using FCG.Catalog.Infrastructure.DataAccess.Document;
 using FCG.Catalog.Infrastructure.DataAccess.Document.Repositories;
 using FCG.Catalog.Infrastructure.DataAccess.Relational;
 using FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 using FCG.Catalog.Infrastructure.Messaging;
+using FCG.Catalog.Infrastructure.Services.Caching;
 using FCG.Catalog.Infrastructure.Services.LoggedUser;
 using FCG.Catalog.Infrastructure.Settings;
 using FCG.Infrastructure.Settings;
@@ -15,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using StackExchange.Redis;
 
 namespace FCG.Catalog.Infrastructure;
 
@@ -28,6 +31,7 @@ public static class DependencyInjectionExtension
         AddMongoDbContext(services, configuration);
         AddRepositories(services);
         AddMessaging(services, configuration);
+        AddCaching(services, configuration);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -93,4 +97,35 @@ public static class DependencyInjectionExtension
 
         services.AddScoped<IEventPublisher, EventPublisher>();
     }
+
+    private static void AddCaching(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<RedisSettings>(
+            configuration.GetSection(RedisSettings.SectionName));
+
+        var redisSettings = configuration
+            .GetSection(RedisSettings.SectionName)
+            .Get<RedisSettings>();
+
+        if (!string.IsNullOrWhiteSpace(redisSettings?.ConnectionString))
+        {
+            try
+            {
+                var options = ConfigurationOptions.Parse(redisSettings.ConnectionString);
+                options.AbortOnConnectFail = false;
+                options.ConnectTimeout = 3000;
+                options.AsyncTimeout = 3000;
+
+                var multiplexer = ConnectionMultiplexer.Connect(options);
+                services.AddSingleton<IConnectionMultiplexer>(multiplexer);
+            }
+            catch
+            {
+                // Resilient fallback: Redis will be null and RedisCacheService will gracefully bypass
+            }
+        }
+
+        services.AddScoped<ICacheService, RedisCacheService>();
+    }
 }
+

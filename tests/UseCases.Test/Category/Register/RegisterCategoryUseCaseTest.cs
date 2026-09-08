@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Repositories;
+using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using FCG.Catalog.Application.UseCases.Categories.Register;
 using FCG.Catalog.Communication.Responses;
@@ -53,6 +53,6 @@ public class RegisterCategoryUseCaseTest
             repository.ExistCategoryWithName(name);
         }
 
-        return new RegisterCategoryUseCase(repository.Build(), unitOfWork);
+        return new RegisterCategoryUseCase(repository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build());
     }
 }

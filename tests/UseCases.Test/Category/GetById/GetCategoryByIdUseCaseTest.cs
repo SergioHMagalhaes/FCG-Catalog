@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using FCG.Catalog.Application.UseCases.Categories.GetById;
 using FCG.Catalog.Communication.Responses;
@@ -38,6 +38,6 @@ public class GetCategoryByIdUseCaseTest
     {
         var repository = new CategoryRepositoryBuilder().GetById(category).Build();
 
-        return new GetCategoryByIdUseCase(repository);
+        return new GetCategoryByIdUseCase(repository, CommonTestUtilities.Services.CacheServiceBuilder.Build());
     }
 }

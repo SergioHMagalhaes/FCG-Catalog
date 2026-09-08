@@ -1,5 +1,6 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
+using CommonTestUtilities.Services;
 using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Communication.Responses;
 using FCG.Catalog.Exception.ExceptionsBase;
@@ -41,6 +42,7 @@ public class GetGameByIdUseCaseTest
     {
         var repository = new GameRepositoryBuilder().GetById(game).Build();
 
-        return new GetGameByIdUseCase(repository);
+        return new GetGameByIdUseCase(repository, CacheServiceBuilder.Build());
     }
 }
+
