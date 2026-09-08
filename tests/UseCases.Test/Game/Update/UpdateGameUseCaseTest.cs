@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using FCG.Catalog.Application.UseCases.Games.Update;
@@ -178,7 +178,7 @@ public class UpdateGameUseCaseTest
 
         return new Sut
         {
-            UseCase = new UpdateGameUseCase(repository.Build(), categoryRepository.Build(), unitOfWork),
+            UseCase = new UpdateGameUseCase(repository.Build(), categoryRepository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build()),
             UnitOfWork = unitOfWorkBuilder
         };
     }
