@@ -1298,6 +1298,554 @@
           ]
         }
       ]
+    },
+    {
+      "name": "Reviews",
+      "description": "Endpoints de cadastro, consulta, atualizacao e exclusao de avaliacoes de jogos.",
+      "item": [
+        {
+          "name": "Cadastrar review",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Cadastra uma avaliacao para um jogo. Requer usuario autenticado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gameId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n  \"rating\": 5,\n  \"comment\": \"Excelente jogo, recomendo!\",\n  \"tags\": [\n    \"diversao\",\n    \"grafico\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Reviews",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Reviews"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Review cadastrada",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"gameId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n  \"rating\": 5,\n  \"comment\": \"Excelente jogo, recomendo!\",\n  \"tags\": [\n    \"diversao\",\n    \"grafico\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews"
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": \"b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10\"\n}"
+            },
+            {
+              "name": "Erro de validacao",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"gameId\": \"00000000-0000-0000-0000-000000000000\",\n  \"rating\": 0,\n  \"comment\": \"\",\n  \"tags\": []\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews"
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"O ID do jogo e obrigatorio.\",\n  \"A nota deve estar entre 1 e 5.\",\n  \"O comentario e obrigatorio.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Listar reviews por jogo",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "description": "Lista as avaliacoes de um jogo com filtros de paginacao e ordenacao.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Reviews?GameId=2f9ac19b-8f5e-4217-9c2b-1b8d58820f91&Page=1&PageSize=10&OrderBy=CreatedAt&Desc=false",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Reviews"
+              ],
+              "query": [
+                {
+                  "key": "GameId",
+                  "value": "2f9ac19b-8f5e-4217-9c2b-1b8d58820f91",
+                  "description": "Identificador externo do jogo."
+                },
+                {
+                  "key": "Page",
+                  "value": "1",
+                  "description": "Pagina consultada. Deve ser maior que 0."
+                },
+                {
+                  "key": "PageSize",
+                  "value": "10",
+                  "description": "Quantidade de itens por pagina. Deve ser maior que 0."
+                },
+                {
+                  "key": "OrderBy",
+                  "value": "CreatedAt",
+                  "description": "Campo de ordenacao. Valores permitidos: Rating, CreatedAt, HelpfulVotes."
+                },
+                {
+                  "key": "Desc",
+                  "value": "false",
+                  "description": "Define se a ordenacao sera decrescente."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Reviews encontradas",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews?GameId=2f9ac19b-8f5e-4217-9c2b-1b8d58820f91&Page=1&PageSize=10&OrderBy=CreatedAt&Desc=false",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews"
+                  ],
+                  "query": [
+                    {
+                      "key": "GameId",
+                      "value": "2f9ac19b-8f5e-4217-9c2b-1b8d58820f91"
+                    },
+                    {
+                      "key": "Page",
+                      "value": "1"
+                    },
+                    {
+                      "key": "PageSize",
+                      "value": "10"
+                    },
+                    {
+                      "key": "OrderBy",
+                      "value": "CreatedAt"
+                    },
+                    {
+                      "key": "Desc",
+                      "value": "false"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"reviews\": [\n    {\n      \"id\": \"b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10\",\n      \"gameId\": \"2f9ac19b-8f5e-4217-9c2b-1b8d58820f91\",\n      \"userId\": \"7f2920e5-07d5-4d2d-8c91-f2df2f6891b3\",\n      \"userName\": \"Sergio Magalhaes\",\n      \"rating\": 5,\n      \"comment\": \"Excelente jogo, recomendo!\",\n      \"helpfulVotes\": 3,\n      \"tags\": [\n        \"diversao\",\n        \"grafico\"\n      ],\n      \"createdAt\": \"2026-07-08T10:30:00Z\"\n    }\n  ],\n  \"totalCount\": 1,\n  \"page\": 1,\n  \"pageSize\": 10,\n  \"totalPages\": 1,\n  \"hasNextPage\": false,\n  \"hasPreviousPage\": false\n}"
+            }
+          ]
+        },
+        {
+          "name": "Marcar review como util",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "description": "Incrementa o contador de votos uteis de uma avaliacao. Requer usuario autenticado.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Reviews/:reviewId/helpful-votes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Reviews",
+                ":reviewId",
+                "helpful-votes"
+              ],
+              "variable": [
+                {
+                  "key": "reviewId",
+                  "value": "b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10",
+                  "description": "Identificador da avaliacao."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Voto util registrado",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews/:reviewId/helpful-votes",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews",
+                    ":reviewId",
+                    "helpful-votes"
+                  ],
+                  "variable": [
+                    {
+                      "key": "reviewId",
+                      "value": "b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10",
+                      "description": "Identificador da avaliacao."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "Review nao encontrada",
+              "originalRequest": {
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews/:reviewId/helpful-votes",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews",
+                    ":reviewId",
+                    "helpful-votes"
+                  ],
+                  "variable": [
+                    {
+                      "key": "reviewId",
+                      "value": "00000000-0000-0000-0000-000000000000",
+                      "description": "Identificador da avaliacao."
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"Review nao encontrada.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Atualizar review",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "description": "Atualiza uma avaliacao existente do usuario autenticado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Bom jogo, mas pode melhorar em alguns pontos.\",\n  \"tags\": [\n    \"diversao\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/Reviews/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Reviews",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10",
+                  "description": "Identificador da avaliacao."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Review atualizada",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Bom jogo, mas pode melhorar em alguns pontos.\",\n  \"tags\": [\n    \"diversao\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10",
+                      "description": "Identificador da avaliacao."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "Review nao encontrada",
+              "originalRequest": {
+                "method": "PUT",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"rating\": 4,\n  \"comment\": \"Bom jogo, mas pode melhorar em alguns pontos.\",\n  \"tags\": [\n    \"diversao\"\n  ]\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "00000000-0000-0000-0000-000000000000",
+                      "description": "Identificador da avaliacao."
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"Review nao encontrada.\"\n  ]\n}"
+            }
+          ]
+        },
+        {
+          "name": "Excluir review",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "description": "Remove uma avaliacao existente do usuario autenticado.",
+            "url": {
+              "raw": "{{baseUrl}}/api/Reviews/:id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "Reviews",
+                ":id"
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": "b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10",
+                  "description": "Identificador da avaliacao."
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "Review excluida",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "b1f0c2f0-7f36-4b3c-9c3a-8a3e5c9a1e10",
+                      "description": "Identificador da avaliacao."
+                    }
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [],
+              "body": ""
+            },
+            {
+              "name": "Review nao encontrada",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/api/Reviews/:id",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "api",
+                    "Reviews",
+                    ":id"
+                  ],
+                  "variable": [
+                    {
+                      "key": "id",
+                      "value": "00000000-0000-0000-0000-000000000000",
+                      "description": "Identificador da avaliacao."
+                    }
+                  ]
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"errorMessages\": [\n    \"Review nao encontrada.\"\n  ]\n}"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
