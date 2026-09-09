@@ -19,7 +19,7 @@
   "variable": [
     {
       "key": "baseUrl",
-      "value": "https://localhost:5001",
+      "value": "http://localhost:8000/catalog-service",
       "type": "string",
       "description": "URL base da FCG Catalog API."
     },
