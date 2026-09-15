@@ -18,6 +18,8 @@ A Catalog API e o microsserviço responsável por gerenciar o catalogo de jogos 
 
 No fluxo de compra, a API recebe a solicitação para adicionar um jogo a biblioteca do usuário, cria um pedido com status pendente e publica o evento `OrderPlacedEvent` via RabbitMQ. Esse evento deve ser consumido pelo microsserviço de pagamentos, conforme a arquitetura proposta no Tech Challenge.
 
+A API também permite que usuários avaliem jogos através de reviews, com nota, comentário, tags e contagem de votos úteis. As reviews são persistidas em um banco de dados orientado a documentos (MongoDB), separado do banco relacional utilizado pelo restante do domínio.
+
 ## Principais funcionalidades
 
 - CRUD de categorias.
@@ -28,8 +30,12 @@ No fluxo de compra, a API recebe a solicitação para adicionar um jogo a biblio
 - Consulta de pedidos do usuário.
 - Consulta de pedido por identificador.
 - Consulta da biblioteca do usuário.
+- Cadastro, atualização e remoção de reviews de jogos.
+- Consulta paginada e ordenada de reviews por jogo (por nota, data ou votos úteis).
+- Marcação de reviews como úteis (helpful votes).
+- Persistência de reviews com MongoDB.
 - Publicação de eventos com RabbitMQ e MassTransit.
-- Persistência com PostgreSQL e Entity Framework Core.
+- Persistência relacional com PostgreSQL e Entity Framework Core.
 - Health check em `/Health` (incluindo status do PostgreSQL, RabbitMQ e Redis).
 - Documentação Swagger em ambiente de desenvolvimento.
 - Manifestos Kubernetes em `k8s/`.
@@ -40,6 +46,7 @@ No fluxo de compra, a API recebe a solicitação para adicionar um jogo a biblio
 - ASP.NET Core Web API
 - Entity Framework Core
 - PostgreSQL
+- MongoDB / MongoDB.Driver
 - Redis / StackExchange.Redis
 - RabbitMQ
 - MassTransit
@@ -58,7 +65,7 @@ src/
   FCG.Catalog.Communication/   # Requests, responses e enums expostos pela API
   FCG.Catalog.Domain/          # Entidades, repositórios, serviços de domínio e contratos
   FCG.Catalog.Exception/       # Exceções de negocio
-  FCG.Catalog.Infrastructure/  # EF Core, PostgreSQL, RabbitMQ, Redis e implementações externas
+  FCG.Catalog.Infrastructure/  # EF Core, PostgreSQL, MongoDB, RabbitMQ, Redis e implementações externas
   FCG.Shared/                  # Eventos compartilhados
 tests/
   CommonTestUtilities/         # Builders e utilitários para testes
@@ -71,6 +78,7 @@ k8s/                           # Manifests de Deployment, Service, ConfigMap e S
 - .NET SDK 10 ou superior.
 - Docker e Docker Compose.
 - PostgreSQL, caso nao utilize o `docker-compose.yml` do projeto.
+- MongoDB, caso nao utilize o `docker-compose.yml` do projeto.
 - Redis, caso nao utilize o `docker-compose.yml` do projeto.
 - RabbitMQ, caso nao utilize o `docker-compose.yml` do projeto.
 - Opcional: Kubernetes local, como Docker Desktop Kubernetes, Kind, Minikube ou k3d.
@@ -83,6 +91,11 @@ Em desenvolvimento, as configurações principais estão em `src/FCG.Catalog.Api
 {
   "ConnectionStrings": {
     "DefaultConnection": "Host=localhost;Port=5432;Database=seu_banco;Username=postgres;Password=postgres"
+  },
+  "MongoDB": {
+    "ConnectionString": "mongodb://fcg_user:fcg_password@localhost:27017/fcg_catalog?authSource=admin",
+    "DatabaseName": "fcg_catalog",
+    "ReviewsCollectionName": "reviews"
   },
   "Jwt": {
     "SigningKey": "sua-chave-jwt",
@@ -107,6 +120,9 @@ Variáveis esperadas:
 | Variável | Descrição |
 | --- | --- |
 | `ConnectionStrings__DefaultConnection` | Connection string do PostgreSQL. |
+| `MongoDB__ConnectionString` | Connection string do MongoDB, usada para persistir as reviews. |
+| `MongoDB__DatabaseName` | Nome do banco de dados do MongoDB (ex: `fcg_catalog`). |
+| `MongoDB__ReviewsCollectionName` | Nome da collection de reviews (ex: `reviews`). |
 | `Jwt__SigningKey` | Chave usada para validar tokens JWT. |
 | `Jwt__Issuer` | Emissor configurado para os tokens. |
 | `RabbitMQ__Host` | Host do RabbitMQ. |
@@ -164,6 +180,9 @@ Execução da API em container:
 docker run --rm -p 8080:8080 \
   -e ASPNETCORE_URLS=http://+:8080 \
   -e ConnectionStrings__DefaultConnection="Host=host.docker.internal;Port=5433;Database=fcg_catalogdb;Username=postgres;Password=postgres" \
+  -e MongoDB__ConnectionString="mongodb://fcg_user:fcg_password@host.docker.internal:27017/fcg_catalog?authSource=admin" \
+  -e MongoDB__DatabaseName="fcg_catalog" \
+  -e MongoDB__ReviewsCollectionName="reviews" \
   -e Jwt__SigningKey="sua-chave-jwt" \
   -e Jwt__Issuer="FCGames" \
   -e RabbitMQ__Host="host.docker.internal" \
@@ -190,6 +209,7 @@ Antes de aplicar os manifests, preencha os valores sensíveis em `k8s/catalog-ap
 ```yaml
 stringData:
   ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=seu_banco;Username=postgres;Password=postgres"
+  MongoDB__ConnectionString: "mongodb://fcg_user:fcg_password@mongodb:27017/fcg_catalog?authSource=admin"
   Jwt__SigningKey: "sua-chave-jwt"
   RabbitMQ__Username: "guest"
   RabbitMQ__Password: "guest"
@@ -204,6 +224,8 @@ data:
   Jwt__Issuer: "FCGames"
   RabbitMQ__Host: "rabbitmq"
   RabbitMQ__VirtualHost: "/"
+  MongoDB__DatabaseName: "fcg_catalog"
+  MongoDB__ReviewsCollectionName: "reviews"
   Redis__ConnectionString: "redis:6379"
   Redis__InstanceName: "fcg:catalog:"
   Redis__DefaultTtlMinutes: "15"
@@ -227,7 +249,7 @@ A API utiliza JWT Bearer. Para acessar rotas protegidas, faça login na api de u
 Authorization: Bearer seu-token-jwt
 ```
 
-Operações administrativas de jogos e categorias exigem a role `ADMIN`. Operações de pedidos e biblioteca exigem usuário autenticado.
+Operações administrativas de jogos e categorias exigem a role `ADMIN`. Operações de pedidos, biblioteca e escrita de reviews (cadastro, atualização, remoção e marcação de voto útil) exigem usuário autenticado; a consulta de reviews por jogo é pública.
 
 ## Postman
 
