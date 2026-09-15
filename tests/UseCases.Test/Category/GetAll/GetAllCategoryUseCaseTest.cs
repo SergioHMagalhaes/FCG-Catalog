@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using FCG.Catalog.Application.UseCases.Categories.GetAll;
 
@@ -22,6 +22,6 @@ public class GetAllCategoryUseCaseTest
     {
         var repository = new CategoryRepositoryBuilder().GetAll(categories).Build();
 
-        return new GetAllCategoryUseCase(repository);
+        return new GetAllCategoryUseCase(repository, CommonTestUtilities.Services.CacheServiceBuilder.Build());
     }
 }

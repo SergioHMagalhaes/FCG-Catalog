@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Repositories;
+using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Communication.Requests;
@@ -164,7 +164,7 @@ public class RegisterGameUseCaseTest
 
         return new CreateUseCase
         {
-            UseCase = new RegisterGameUseCase(repository, categoryRepository.Build(), unitOfWork),
+            UseCase = new RegisterGameUseCase(repository, categoryRepository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build()),
             UnitOfWork = unitOfWorkBuilder
         };
     }

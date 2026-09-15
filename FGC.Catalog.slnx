@@ -11,5 +11,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/CommonTestUtilities/CommonTestUtilities.csproj" Id="2e5d971f-2d48-40a3-97de-ee38744583c5" />
     <Project Path="tests/UseCases.Test/UseCases.Test.csproj" Id="5ad9e66d-fbb1-4120-bf1c-22d309c622ea" />
+    <Project Path="tests/Infrastructure.Test/Infrastructure.Test.csproj" />
   </Folder>
 </Solution>

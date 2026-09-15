@@ -1,0 +1,22 @@
+﻿using FCG.Catalog.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+
+namespace FCG.Catalog.Infrastructure.DataAccess.Relational;
+
+public class ApplicationDbContext : DbContext
+{
+    public ApplicationDbContext(DbContextOptions options) : base(options) { }
+
+    public DbSet<Game> Games { get; set; }
+    public DbSet<Category> Categories { get; set; }
+    public DbSet<GameOrder> GameOrders { get; set; }
+
+    public DbSet<Library> Libraries { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(modelBuilder);
+    }
+}

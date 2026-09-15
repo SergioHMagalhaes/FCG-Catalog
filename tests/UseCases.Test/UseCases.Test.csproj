@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FCG.Catalog.Communication\FCG.Catalog.Communication.csproj" />
     <ProjectReference Include="..\..\src\FCG.Catalog.Exception\FCG.Catalog.Exception.csproj" />
+    <ProjectReference Include="..\..\src\FCG.Catalog.Infrastructure\FCG.Catalog.Infrastructure.csproj" />
     <ProjectReference Include="..\CommonTestUtilities\CommonTestUtilities.csproj" />
   </ItemGroup>
 

@@ -1,4 +1,4 @@
-﻿using CommonTestUtilities.Entities;
+using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using FCG.Catalog.Application.UseCases.Categories.Delete;
 using FCG.Catalog.Application.UseCases.Categories.Update;
@@ -37,6 +37,6 @@ public class DeleteCategoryUseCaseTest
         else
             repository.GetByIdTrackedNotFound();
 
-        return new DeleteCategoryUseCase(repository.Build(), unitOfWork);
+        return new DeleteCategoryUseCase(repository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build());
     }
 }

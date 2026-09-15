@@ -1,7 +1,9 @@
-﻿using FCG.Catalog.Application.Extensions;
+using FCG.Catalog.Application.Extensions;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
+using FCG.Catalog.Domain.Constants;
 using FCG.Catalog.Domain.Repositories;
+using FCG.Catalog.Domain.Services.Caching;
 using FCG.Catalog.Exception.ExceptionsBase;
 using FluentValidation.Results;
 
@@ -11,13 +13,16 @@ public class RegisterCategoryUseCase : IRegisterCategoryUseCase
 {
     private readonly ICategoryRepository _repository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly ICacheService _cacheService;
 
     public RegisterCategoryUseCase(
         ICategoryRepository repository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        ICacheService cacheService)
     {
         _repository = repository;
         _unitOfWork = unitOfWork;
+        _cacheService = cacheService;
     }
 
     public async Task<ResponseRegisterdCategoryJson> Execute(RequestCategoryJson request)
@@ -27,6 +32,8 @@ public class RegisterCategoryUseCase : IRegisterCategoryUseCase
         
         await _repository.Add(category);
         await _unitOfWork.Commit();
+
+        await _cacheService.RemoveByPrefixAsync(CacheKeys.Categories.PrefixAll);
 
         return new ResponseRegisterdCategoryJson
         {

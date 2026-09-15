@@ -3,13 +3,16 @@ using FCG.Catalog.Api.Token;
 using FCG.Catalog.Application;
 using FCG.Catalog.Domain.Tokens;
 using FCG.Catalog.Infrastructure;
-using FCG.Catalog.Infrastructure.DataAccess;
+using FCG.Catalog.Infrastructure.DataAccess.Relational;
 using FCG.Catalog.Infrastructure.Migrations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+using Prometheus;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +47,18 @@ builder.Services.AddSwaggerGen(options =>
         [new OpenApiSecuritySchemeReference("bearer", document)] = []
     });
 });
+builder.Services.AddOpenTelemetry()
+    .WithTracing(tracerProviderBuilder =>
+    {
+        tracerProviderBuilder
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("fcg-catalog-api"))
+            .AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddOtlpExporter(options =>
+            {
+                options.Endpoint = new Uri(builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"] ?? "http://tempo.default:4317");
+            });
+    });
 
 builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)));
 
@@ -71,9 +86,15 @@ builder.Services.AddAuthentication(config =>
     };
 });
 
-builder.Services
+var healthChecksBuilder = builder.Services
     .AddHealthChecks()
     .AddDbContextCheck<ApplicationDbContext>();
+
+var redisConnectionString = builder.Configuration.GetValue<string>("Redis:ConnectionString");
+if (!string.IsNullOrWhiteSpace(redisConnectionString))
+{
+    healthChecksBuilder.AddRedis(redisConnectionString, name: "redis");
+}
 
 var app = builder.Build();
 
@@ -96,12 +117,13 @@ if (app.Environment.IsDevelopment())
         options.DocumentTitle = "FCG - Catalog API";
     });
 }
-
+app.UseHttpMetrics();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapMetrics();
 
 await MigrateDatabase();
 
