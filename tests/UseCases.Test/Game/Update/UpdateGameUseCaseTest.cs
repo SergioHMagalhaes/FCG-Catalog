@@ -1,6 +1,7 @@
 using CommonTestUtilities.Entities;
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
+using CommonTestUtilities.Services;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
@@ -13,6 +14,7 @@ internal class Sut
 {
     public required UpdateGameUseCase UseCase;
     public required UnitOfWorkBuilder UnitOfWork;
+    public required GameSearchServiceBuilder SearchService;
 }
 
 public class UpdateGameUseCaseTest
@@ -162,6 +164,34 @@ public class UpdateGameUseCaseTest
         unitOfWorkBuilder.VerifyCommitNever();
     }
 
+    [Fact]
+    public async Task Success_Should_Index_Game()
+    {
+        var game = GameBuilder.Build();
+        var request = RequestGameJsonBuilder.Build();
+        var sut = CreateSut(game, request);
+
+        await sut.UseCase.Execute(game.Id, request);
+
+        sut.SearchService.VerifyIndexOnce(indexed => indexed.Name == request.Name);
+    }
+
+    [Fact]
+    public async Task Error_Name_Empty_Should_Not_Index_Game()
+    {
+        var game = GameBuilder.Build();
+        var request = RequestGameJsonBuilder.Build();
+        request.Name = string.Empty;
+
+        var sut = CreateSut(game);
+        var useCase = sut.UseCase;
+
+        async Task act() => await useCase.Execute(game.Id, request);
+
+        await Assert.ThrowsAsync<ErrorOnValidationException>(act);
+
+        sut.SearchService.VerifyIndexNever();
+    }
 
     private Sut CreateSut(FCG.Catalog.Domain.Entities.Game game, RequestGameJson? request = null)
     {
@@ -169,17 +199,24 @@ public class UpdateGameUseCaseTest
         var categoryRepository = new CategoryRepositoryBuilder();
         var unitOfWorkBuilder = new UnitOfWorkBuilder();
         var unitOfWork = unitOfWorkBuilder.Build();
+        var searchServiceBuilder = new GameSearchServiceBuilder();
 
         if (request != null)
         {
             var categoryEntity = new FCG.Catalog.Domain.Entities.Category() { Id = request.CategoryId, Name = "test_value" };
-            categoryRepository.GetById(categoryEntity);
+            categoryRepository.GetByIdTracked(categoryEntity);
         }
 
         return new Sut
         {
-            UseCase = new UpdateGameUseCase(repository.Build(), categoryRepository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build()),
-            UnitOfWork = unitOfWorkBuilder
+            UseCase = new UpdateGameUseCase(
+                repository.Build(),
+                categoryRepository.Build(),
+                unitOfWork,
+                CacheServiceBuilder.Build(),
+                searchServiceBuilder.Build()),
+            UnitOfWork = unitOfWorkBuilder,
+            SearchService = searchServiceBuilder
         };
     }
 }

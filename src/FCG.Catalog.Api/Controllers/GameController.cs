@@ -2,6 +2,7 @@
 using FCG.Catalog.Application.UseCases.Games.GetAll;
 using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Search;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
@@ -34,6 +35,23 @@ public class GameController : ControllerBase
     public async Task<IActionResult> GetAllGames(
         [FromServices] IGetAllGamesUseCase useCase,
         [FromQuery] RequestGetAllGamesJson request)
+    {
+        var response = await useCase.Execute(request);
+
+        if (response.Games.Count != 0)
+            return Ok(response);
+
+        return NoContent();
+    }
+
+    [HttpGet]
+    [Route("search")]
+    [ProducesResponseType(typeof(ResponseGamesJson), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ResponseErrorJson), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Search(
+        [FromServices] ISearchGamesUseCase useCase,
+        [FromQuery] RequestSearchGamesJson request)
     {
         var response = await useCase.Execute(request);
 

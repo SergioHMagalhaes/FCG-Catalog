@@ -10,6 +10,7 @@ using FCG.Catalog.Application.UseCases.Games.Delete;
 using FCG.Catalog.Application.UseCases.Games.GetAll;
 using FCG.Catalog.Application.UseCases.Games.GetById;
 using FCG.Catalog.Application.UseCases.Games.Register;
+using FCG.Catalog.Application.UseCases.Games.Search;
 using FCG.Catalog.Application.UseCases.Games.Update;
 using FCG.Catalog.Application.UseCases.Libraries.GetUserLibrary;
 using FCG.Catalog.Application.UseCases.Reviews.Delete;
@@ -40,6 +41,7 @@ public static class DependencyInjectionExtension
         services.AddScoped<IGetGameByIdUseCase, GetGameByIdUseCase>();
         services.AddScoped<IUpdateGameUseCase, UpdateGameUseCase>();
         services.AddScoped<IDeleteGameUseCase, DeleteGameUseCase>();
+        services.AddScoped<ISearchGamesUseCase, SearchGamesUseCase>();
         services.AddScoped<IPlaceGameOrderUseCase, PlaceGameOrderUseCase>();
         services.AddScoped<IGetUserGamerOrderUseCase, GetUserGamerOrderUseCase>();
         services.AddScoped<IGetGameOrderByIdUseCase, GetGameOrderByIdUseCase>();

@@ -1,6 +1,7 @@
 using FCG.Catalog.Api.Filters;
 using FCG.Catalog.Api.Token;
 using FCG.Catalog.Application;
+using FCG.Catalog.Domain.Services.Search;
 using FCG.Catalog.Domain.Tokens;
 using FCG.Catalog.Infrastructure;
 using FCG.Catalog.Infrastructure.DataAccess.Relational;
@@ -96,6 +97,12 @@ if (!string.IsNullOrWhiteSpace(redisConnectionString))
     healthChecksBuilder.AddRedis(redisConnectionString, name: "redis");
 }
 
+var elasticsearchUri = builder.Configuration.GetValue<string>("Elasticsearch:Uri");
+if (!string.IsNullOrWhiteSpace(elasticsearchUri))
+{
+    healthChecksBuilder.AddElasticsearch(elasticsearchUri, name: "elasticsearch");
+}
+
 var app = builder.Build();
 
 app.MapHealthChecks("/Health", new HealthCheckOptions
@@ -126,6 +133,7 @@ app.MapControllers();
 app.MapMetrics();
 
 await MigrateDatabase();
+await EnsureSearchIndexCreated();
 
 app.Run();
 
@@ -134,4 +142,12 @@ async Task MigrateDatabase()
     await using var scope = app.Services.CreateAsyncScope();
 
     await DataBaseMigration.MigrateDatabase(scope.ServiceProvider);
+}
+
+async Task EnsureSearchIndexCreated()
+{
+    await using var scope = app.Services.CreateAsyncScope();
+
+    var searchService = scope.ServiceProvider.GetRequiredService<IGameSearchService>();
+    await searchService.EnsureIndexCreatedAsync();
 }
