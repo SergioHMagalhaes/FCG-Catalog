@@ -1,5 +1,6 @@
 using CommonTestUtilities.Repositories;
 using CommonTestUtilities.Requests;
+using CommonTestUtilities.Services;
 using FCG.Catalog.Application.UseCases.Games.Register;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Communication.Responses;
@@ -10,6 +11,7 @@ namespace UseCases.Test.Game.Register;
 internal class CreateUseCase {
     public required RegisterGameUseCase UseCase;
     public required UnitOfWorkBuilder UnitOfWork;
+    public required GameSearchServiceBuilder SearchService;
 }
 
 public class RegisterGameUseCaseTest
@@ -149,23 +151,57 @@ public class RegisterGameUseCaseTest
         unitOfWorkBuilder.VerifyCommitNever();
     }
 
+    [Fact]
+    public async Task Success_Should_Index_Game()
+    {
+        var request = RequestGameJsonBuilder.Build();
+        var sut = CreateSut(request);
+
+        await sut.UseCase.Execute(request);
+
+        sut.SearchService.VerifyIndexOnce(game => game.Name == request.Name);
+    }
+
+    [Fact]
+    public async Task Error_Name_Empty_Should_Not_Index_Game()
+    {
+        var request = RequestGameJsonBuilder.Build();
+        request.Name = string.Empty;
+
+        var sut = CreateSut();
+        var useCase = sut.UseCase;
+
+        async Task<ResponseRegisterdGameJson> act() => await useCase.Execute(request);
+
+        await Assert.ThrowsAsync<ErrorOnValidationException>(act);
+
+        sut.SearchService.VerifyIndexNever();
+    }
+
     private CreateUseCase CreateSut(RequestGameJson? request = null)
     {
         var unitOfWorkBuilder = new UnitOfWorkBuilder();
         var unitOfWork = unitOfWorkBuilder.Build();
         var repository = new GameRepositoryBuilder().Build();
         var categoryRepository = new CategoryRepositoryBuilder();
+        var searchServiceBuilder = new GameSearchServiceBuilder();
 
         if (request != null)
         {
             var categoryEntity = new FCG.Catalog.Domain.Entities.Category() { Id = request.CategoryId, Name = "test_value" };
-            categoryRepository.GetById(categoryEntity);
+            categoryRepository.GetByIdTracked(categoryEntity);
         }
 
         return new CreateUseCase
         {
-            UseCase = new RegisterGameUseCase(repository, categoryRepository.Build(), unitOfWork, CommonTestUtilities.Services.CacheServiceBuilder.Build()),
-            UnitOfWork = unitOfWorkBuilder
+            UseCase = new RegisterGameUseCase(
+                repository,
+                categoryRepository.Build(),
+                unitOfWork,
+                CacheServiceBuilder.Build(),
+                searchServiceBuilder.Build()),
+            UnitOfWork = unitOfWorkBuilder,
+            SearchService = searchServiceBuilder
         };
     }
 }

@@ -90,6 +90,8 @@ jobs:
           --from-literal=Redis__ConnectionString="${{ secrets.REDIS_SERVER }}:${{secrets.REDIS_PORT}}" \
           --from-literal=Redis__InstanceName="${{ secrets.REDIS_INSTANCE_NAME}}" \
           --from-literal=Redis__DefaultTtlMinutes="${{ secrets.REDIS_TIMEOUT}}" \
+          --from-literal=Elasticsearch__Uri="http://${{ secrets.ELASTICSEARCH_HOST }}:${{ secrets.ELASTICSEARCH_PORT }}" \
+          --from-literal=Elasticsearch__IndexName="games" \
           --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -f ./k8s/
           kubectl set image deployment/$DEPLOYMENT_NAME $CONTAINER_NAME=$REGISTRY/$REPOSITORY:$CLEAN_TAG

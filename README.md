@@ -36,7 +36,8 @@ A API também permite que usuários avaliem jogos através de reviews, com nota,
 - Persistência de reviews com MongoDB.
 - Publicação de eventos com RabbitMQ e MassTransit.
 - Persistência relacional com PostgreSQL e Entity Framework Core.
-- Health check em `/Health` (incluindo status do PostgreSQL, RabbitMQ e Redis).
+- Busca textual de jogos com Elasticsearch (`GET /api/game/search`), com tolerância a erros de digitação.
+- Health check em `/Health` (incluindo status do PostgreSQL, RabbitMQ, Redis e Elasticsearch).
 - Documentação Swagger em ambiente de desenvolvimento.
 - Manifestos Kubernetes em `k8s/`.
 
@@ -48,6 +49,7 @@ A API também permite que usuários avaliem jogos através de reviews, com nota,
 - PostgreSQL
 - MongoDB / MongoDB.Driver
 - Redis / StackExchange.Redis
+- Elasticsearch
 - RabbitMQ
 - MassTransit
 - JWT Bearer
@@ -111,6 +113,13 @@ Em desenvolvimento, as configurações principais estão em `src/FCG.Catalog.Api
     "ConnectionString": "localhost:6379",
     "InstanceName": "fcg:catalog:",
     "DefaultTtlMinutes": 15
+  },
+  "Elasticsearch": {
+    "Uri": "http://localhost:9200",
+    "IndexName": "games",
+    "Username": "",
+    "Password": "",
+    "ApiKey": ""
   }
 }
 ```
@@ -132,6 +141,19 @@ Variáveis esperadas:
 | `Redis__ConnectionString` | Connection string do Redis (ex: `localhost:6379` ou `redis:6379`). |
 | `Redis__InstanceName` | Prefixo/namespace das chaves no Redis (ex: `fcg:catalog:`). |
 | `Redis__DefaultTtlMinutes` | Tempo padrão de expiração do cache em minutos (ex: `15`). |
+| `Elasticsearch__Uri` | URL do Elasticsearch (ex: `http://localhost:9200` ou `http://elasticsearch:9200`). Se vazio, a busca fica desabilitada (ver seção abaixo). |
+| `Elasticsearch__IndexName` | Nome do índice usado para os documentos de jogos (ex: `games`). |
+| `Elasticsearch__Username` / `Elasticsearch__Password` | Credenciais de autenticação básica, se o cluster exigir. |
+| `Elasticsearch__ApiKey` | API Key de autenticação, alternativa ao usuário/senha. |
+
+## Busca com Elasticsearch
+
+O endpoint `GET /api/game/search?query=&page=&pageSize=` realiza busca textual (multi-match com fuzziness) nos campos `name` (com peso maior), `description` e `categoryName` do índice configurado em `Elasticsearch__IndexName`.
+
+- **Indexação automática**: jogos são indexados/atualizados no Elasticsearch ao serem cadastrados (`POST /api/game`) ou atualizados (`PUT /api/game/{id}`), e removidos do índice ao serem excluídos (`DELETE /api/game/{id}`).
+- **Criação do índice**: o índice é criado automaticamente na inicialização da API, caso ainda não exista.
+- **Resiliência e fallback**: se `Elasticsearch__Uri` não estiver configurado, ou o cluster estiver indisponível, a aplicação não quebra — a indexação é ignorada (com log de warning) e a busca retorna uma lista vazia.
+- **Health Check**: a integridade do Elasticsearch é monitorada e reportada no endpoint `/Health` (quando `Elasticsearch__Uri` está configurado).
 
 ## Estratégia de Caching com Redis
 
@@ -192,6 +214,8 @@ docker run --rm -p 8080:8080 \
   -e Redis__ConnectionString="host.docker.internal:6379" \
   -e Redis__InstanceName="fcg:catalog:" \
   -e Redis__DefaultTtlMinutes="15" \
+  -e Elasticsearch__Uri="http://host.docker.internal:9200" \
+  -e Elasticsearch__IndexName="games" \
   fcg-catalog-api
 ```
 
@@ -229,7 +253,11 @@ data:
   Redis__ConnectionString: "redis:6379"
   Redis__InstanceName: "fcg:catalog:"
   Redis__DefaultTtlMinutes: "15"
+  Elasticsearch__Uri: "http://elasticsearch:9200"
+  Elasticsearch__IndexName: "games"
 ```
+
+> O Deployment e o Service do Elasticsearch usado pela Catalog API ficam no repositório **FCG-Infra** (`k8s/elasticsearch/`), junto com a demais infraestrutura compartilhada (PostgreSQL, MongoDB, Redis, RabbitMQ). Garanta que esses manifests estejam aplicados no mesmo namespace antes de subir a Catalog API.
 
 Aplicação dos manifests:
 

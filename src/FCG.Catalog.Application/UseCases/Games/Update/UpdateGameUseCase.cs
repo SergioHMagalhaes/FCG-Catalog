@@ -1,8 +1,10 @@
 using FCG.Catalog.Application.Extensions;
 using FCG.Catalog.Communication.Requests;
 using FCG.Catalog.Domain.Constants;
+using FCG.Catalog.Domain.Entities;
 using FCG.Catalog.Domain.Repositories;
 using FCG.Catalog.Domain.Services.Caching;
+using FCG.Catalog.Domain.Services.Search;
 using FCG.Catalog.Exception.ExceptionsBase;
 using FluentValidation.Results;
 
@@ -14,21 +16,24 @@ public class UpdateGameUseCase : IUpdateGameUseCase
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ICacheService _cacheService;
+    private readonly IGameSearchService _searchService;
 
     public UpdateGameUseCase(
         IGameRepository repository,
         ICategoryRepository categoryRepository,
         IUnitOfWork unitOfWork,
-        ICacheService cacheService)
+        ICacheService cacheService,
+        IGameSearchService searchService)
     {
         _repository = repository;
         _categoryRepository = categoryRepository;
         _unitOfWork = unitOfWork;
         _cacheService = cacheService;
+        _searchService = searchService;
     }
     public async Task Execute(long id, RequestGameJson request)
     {
-        await Validate(request);
+        var category = await Validate(request);
 
         var game = await _repository.GetByIdTracked(id);
 
@@ -37,19 +42,23 @@ public class UpdateGameUseCase : IUpdateGameUseCase
             throw new NotFoundException("Jogo não encontrado.");
         }
 
-        _repository.Update(request.MapToDomain(game));
+        game = request.MapToDomain(game);
+        game.Category = category!;
+
+        _repository.Update(game);
         await _unitOfWork.Commit();
 
         await _cacheService.RemoveAsync(CacheKeys.Games.ById(id));
         await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.ListPrefix);
+        await _searchService.IndexAsync(game);
     }
 
-    private async Task Validate(RequestGameJson request)
+    private async Task<Category?> Validate(RequestGameJson request)
     {
         var result = new RegisterGameValidator().Validate(request);
 
-        var nameExists = await _categoryRepository.GetById(request.CategoryId);
-        if (nameExists is null)
+        var category = await _categoryRepository.GetByIdTracked(request.CategoryId);
+        if (category is null)
         {
             result.Errors.Add(new ValidationFailure(string.Empty, "Categoria não encontrada."));
         }
@@ -60,5 +69,7 @@ public class UpdateGameUseCase : IUpdateGameUseCase
 
             throw new ErrorOnValidationException(errorMessages);
         }
+
+        return category;
     }
 }
