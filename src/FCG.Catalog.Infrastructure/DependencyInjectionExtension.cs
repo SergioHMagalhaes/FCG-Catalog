@@ -1,7 +1,10 @@
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using FCG.Catalog.Domain.Messaging;
 using FCG.Catalog.Domain.Repositories;
 using FCG.Catalog.Domain.Services.Caching;
 using FCG.Catalog.Domain.Services.LoggedUser;
+using FCG.Catalog.Domain.Services.Search;
 using FCG.Catalog.Infrastructure.DataAccess.Document;
 using FCG.Catalog.Infrastructure.DataAccess.Document.Repositories;
 using FCG.Catalog.Infrastructure.DataAccess.Relational;
@@ -9,6 +12,7 @@ using FCG.Catalog.Infrastructure.DataAccess.Relational.Repositories;
 using FCG.Catalog.Infrastructure.Messaging;
 using FCG.Catalog.Infrastructure.Services.Caching;
 using FCG.Catalog.Infrastructure.Services.LoggedUser;
+using FCG.Catalog.Infrastructure.Services.Search;
 using FCG.Catalog.Infrastructure.Settings;
 using FCG.Infrastructure.Settings;
 using FCG.Shared.Events;
@@ -32,6 +36,7 @@ public static class DependencyInjectionExtension
         AddRepositories(services);
         AddMessaging(services, configuration);
         AddCaching(services, configuration);
+        AddSearch(services, configuration);
     }
 
     private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -126,6 +131,45 @@ public static class DependencyInjectionExtension
         }
 
         services.AddScoped<ICacheService, RedisCacheService>();
+    }
+
+    private static void AddSearch(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<ElasticsearchSettings>(
+            configuration.GetSection(ElasticsearchSettings.SectionName));
+
+        var elasticsearchSettings = configuration
+            .GetSection(ElasticsearchSettings.SectionName)
+            .Get<ElasticsearchSettings>();
+
+        if (!string.IsNullOrWhiteSpace(elasticsearchSettings?.Uri))
+        {
+            try
+            {
+                var clientSettings = new ElasticsearchClientSettings(new Uri(elasticsearchSettings.Uri))
+                    .DefaultIndex(elasticsearchSettings.IndexName);
+
+                if (!string.IsNullOrWhiteSpace(elasticsearchSettings.ApiKey))
+                {
+                    clientSettings = clientSettings.Authentication(new ApiKey(elasticsearchSettings.ApiKey));
+                }
+                else if (!string.IsNullOrWhiteSpace(elasticsearchSettings.Username) &&
+                         !string.IsNullOrWhiteSpace(elasticsearchSettings.Password))
+                {
+                    clientSettings = clientSettings.Authentication(
+                        new BasicAuthentication(elasticsearchSettings.Username, elasticsearchSettings.Password));
+                }
+
+                var client = new ElasticsearchClient(clientSettings);
+                services.AddSingleton(client);
+            }
+            catch
+            {
+                // Resilient fallback: Elasticsearch client will be null and GameSearchService will gracefully bypass
+            }
+        }
+
+        services.AddScoped<IGameSearchService, GameSearchService>();
     }
 }
 
