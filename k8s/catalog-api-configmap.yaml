@@ -15,3 +15,6 @@ data:
   Redis__ConnectionString: "redis:6379"
   Redis__InstanceName: "fcg:catalog:"
   Redis__DefaultTtlMinutes: "15"
+
+  Elasticsearch__Uri: "http://elasticsearch:9200"
+  Elasticsearch__IndexName: "games"

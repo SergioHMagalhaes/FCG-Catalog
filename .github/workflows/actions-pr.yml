@@ -1,0 +1,40 @@
+name: Pipeline PR
+
+on:
+  pull_request:
+    branches:
+      - main
+permissions:
+  checks: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+            dotnet-version: '10.x'
+
+      - name: Restore dependencies
+        run: dotnet restore FGC.Catalog.slnx
+
+      - name: Build
+        run: dotnet build FGC.Catalog.slnx --no-restore --configuration Release
+
+      - name: Testar e gerar relatório
+        run: dotnet test FGC.Catalog.slnx --no-build --configuration Release --logger "trx;LogFileName=test-results.trx" --results-directory ./TestResults
+
+      - name: Publicando relatório de teste
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Relatório de Testes C#
+          path: TestResults/test-results.trx
+          reporter: dotnet-trx
