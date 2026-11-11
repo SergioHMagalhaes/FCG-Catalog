@@ -281,4 +281,4 @@ Operações administrativas de jogos e categorias exigem a role `ADMIN`. Operaç
 
 ## Postman
 
-O repositório contem a coleção `postman_collection.json`, que pode ser importada no Postman para testar os endpoints da API..
+O repositório contem a coleção `postman_collection.json`, que pode ser importada no Postman para testar os endpoints da API.
