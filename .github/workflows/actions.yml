@@ -95,7 +95,7 @@ jobs:
           --dry-run=client -o yaml | kubectl apply -f -
           kubectl apply -f ./k8s/
           kubectl set image deployment/$DEPLOYMENT_NAME $CONTAINER_NAME=$REGISTRY/$REPOSITORY:$CLEAN_TAG
-          kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=120s
+          kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=300s
 
       - name: Publicando relatório de teste
         uses: dorny/test-reporter@v1
