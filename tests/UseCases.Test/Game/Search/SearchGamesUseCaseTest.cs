@@ -62,6 +62,6 @@ public class SearchGamesUseCaseTest
     {
         var searchServiceBuilder = new GameSearchServiceBuilder().Search(result);
 
-        return new SearchGamesUseCase(searchServiceBuilder.Build());
+        return new SearchGamesUseCase(searchServiceBuilder.Build(), CacheServiceBuilder.Build());
     }
 }
