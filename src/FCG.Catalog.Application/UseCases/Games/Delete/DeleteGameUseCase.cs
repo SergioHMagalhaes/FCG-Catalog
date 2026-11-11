@@ -37,6 +37,7 @@ public class DeleteGameUseCase : IDeleteGameUseCase
 
         await _cacheService.RemoveAsync(CacheKeys.Games.ById(id));
         await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.ListPrefix);
+        await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.SearchPrefix);
         await _searchService.DeleteAsync(id);
     }
 }

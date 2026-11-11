@@ -67,7 +67,8 @@ public static class GameExtensions
                 Id = game.Id,
                 ExternalId = game.ExternalId,
                 Name = game.Name,
-                Price = game.Price
+                Price = game.Price,
+                CategoryId = game.CategoryId
             }).ToList(),
             Page = pagedResult.Page,
             PageSize = pagedResult.PageSize,

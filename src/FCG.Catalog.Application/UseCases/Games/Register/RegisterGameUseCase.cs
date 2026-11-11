@@ -42,6 +42,7 @@ public class RegisterGameUseCase : IRegisterGameUseCase
         await _unitOfWork.Commit();
 
         await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.ListPrefix);
+        await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.SearchPrefix);
         await _searchService.IndexAsync(game);
 
         return new ResponseRegisterdGameJson

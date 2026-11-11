@@ -24,6 +24,18 @@ public static class CacheKeys
 
             return $"{ListPrefix}{hash}";
         }
+
+        public static string SearchPrefix => $"{Root}:search:";
+
+        public static string Search(string query, int page, int pageSize)
+        {
+            var rawKey = $"query={query.Trim().ToLowerInvariant()}&page={page}&size={pageSize}";
+            using var sha256 = SHA256.Create();
+            var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(rawKey));
+            var hash = Convert.ToHexString(hashBytes).ToLowerInvariant()[..16];
+
+            return $"{SearchPrefix}{hash}";
+        }
     }
 
     public static class Categories

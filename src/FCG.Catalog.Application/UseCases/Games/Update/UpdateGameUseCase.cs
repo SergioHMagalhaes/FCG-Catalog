@@ -50,6 +50,7 @@ public class UpdateGameUseCase : IUpdateGameUseCase
 
         await _cacheService.RemoveAsync(CacheKeys.Games.ById(id));
         await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.ListPrefix);
+        await _cacheService.RemoveByPrefixAsync(CacheKeys.Games.SearchPrefix);
         await _searchService.IndexAsync(game);
     }
 
