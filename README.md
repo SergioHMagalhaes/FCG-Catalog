@@ -279,6 +279,18 @@ Authorization: Bearer seu-token-jwt
 
 Operações administrativas de jogos e categorias exigem a role `ADMIN`. Operações de pedidos, biblioteca e escrita de reviews (cadastro, atualização, remoção e marcação de voto útil) exigem usuário autenticado; a consulta de reviews por jogo é pública.
 
+## CI/CD
+
+O repositório utiliza GitHub Actions com dois workflows, definidos em `.github/workflows/`:
+
+- **Pipeline PR** (`actions-pr.yml`): executada em pull requests para `main`. Faz restore, build e execução dos testes (`dotnet test`), publicando o relatório de testes no próprio PR.
+- **Pipeline Infra** (`actions.yml`): executada em push para `main` e em tags no formato `v*`. Faz restore, build e testes; em pushes para `main`, a pipeline roda até a etapa de testes. Quando o push é uma tag (`v*`), a pipeline adicionalmente:
+  - autentica na AWS e faz login no Amazon ECR;
+  - builda a imagem Docker e publica no ECR com a tag `vX.Y.Z` (sem o prefixo `v`);
+  - atualiza o `kubeconfig` do cluster EKS, aplica o secret `catalog-api-secret` e os manifests da pasta `k8s/`, e atualiza a imagem do deployment `catalog-api`, aguardando o rollout.
+
+Para disparar o deploy em produção, crie e envie uma tag seguindo o padrão `vX.Y.Z` (ex: `v1.0.0`) a partir da branch `main`.
+
 ## Postman
 
 O repositório contem a coleção `postman_collection.json`, que pode ser importada no Postman para testar os endpoints da API.
